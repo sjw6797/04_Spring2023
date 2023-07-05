@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.ezen.dao.IQnaDao">
+	<!-- 페이징 작업에 필요한 qna레코드 수 추출 -->
+	<select id="getAllCount" resultType="_int">
+		select count(*) from view_qna where title like '%'||#{param1}||'%' or content like '%'||#{param1}||'%' or name like '%'||#{param1}||'%'
+		<!-- key가지고 페이징처리 -->
+	</select>
+	
+	<!-- 페이징 + qnaList 추출 -->
+	<select id="getQnaList"  resultType="com.ezen.dto.QnaVO">
+		select * from (
+			select * from (
+				select rownum as rn, q.* from ( ( select * from view_qna where title like '%'||#{param2}||'%' or content like '%'||#{param2}||'%' or name like '%'||#{param2}||'%' order by qna_num desc ) q )
+			) where rn &gt;= #{param1.startNum}
+		) where rn &lt;= #{param1.endNum}
+	</select>
+	
+	<!-- qna_num으로 조회한 QNA정보 -->
+	<select id="getQnaByQnaNum" resultType="com.ezen.dto.QnaVO">
+		select * from view_qna where qna_num=#{param1}
+	</select>
+	<!-- qna_num으로 QNA삭제 -->
+	<delete id="qnaDelete">
+		delete from qna where qna_num = #{param1}
+	</delete>
+	
+	<!-- qna작성 -->
+	<insert id="qnaInsert">
+		insert into qna(qna_num,mnum,title,content) values(qna_seq.nextval,#{param2},#{param1.title},#{param1.content})
+	</insert>
+	
+	<select id="getMemberBymnum" resultType="_int">
+		select member_num from member where id=#{param1}
+	</select>
+	
+	<update id="plusOneReadCount">
+		update qna set readcount = readcount+1 where qna_num = #{param1}
+	</update>
+	
+	<update id="updateQna" parameterType="com.ezen.dto.QnaVO">
+		update qna set title=#{title},content=#{content},imgfilename=#{imgfilename} where qna_num=#{qna_num}
+	</update>
+</mapper>

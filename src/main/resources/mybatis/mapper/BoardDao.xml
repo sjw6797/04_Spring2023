@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ezen.dao.IBoardDao">
+
+	<select id="getAllCount" resultType="_int">
+		select count(*) from ${param1} where ${param2} like '%'||#{param3}||'%'
+	</select>
+	
+	<select id="listBoard" resultType="com.ezen.dto.BoardVO">
+		select * from ( 
+		select * from(
+			select rownum as rn, p.* from 
+			((select * from board where title like '%'||#{param2}||'%'   order by board_num desc) p )
+		) where rn &gt;= #{param1.startNum} 
+		) where rn &lt;= #{param1.endNum} 
+	</select>
+	
+	<select id="getBoard" resultType="com.ezen.dto.BoardVO">
+		select * from board where board_num=${param1}
+	</select>
+
+	
+</mapper>

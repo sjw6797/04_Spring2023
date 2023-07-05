@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ezen.dao.IMemberDao">
+
+	<select id="getMember" parameterType="com.ezen.dto.MemberVO">
+		select * from member where id=#{param1}
+	</select>
+
+	<insert id="insertMember" parameterType="com.ezen.dto.MemberVO">
+		insert into member (member_num, id, pwd, name, phone, birth, email, zip_num, address1, address2, gender)
+		values (member_seq.nextval, #{id}, #{pwd}, #{name}, #{phone}, #{birth}, #{email}, #{zip_num}, #{address1}, #{address2}, #{gender})
+	</insert>
+	
+	<insert id="joinKakao" parameterType="com.ezen.dto.MemberVO">
+		insert into member(member_num, id, email, name, provider )values(member_seq.nextval, #{id}, #{email}, #{name}, #{provider} )
+	</insert>
+	
+	<update id="updateMember" parameterType="com.ezen.dto.MemberVO">
+		Update member set pwd=#{pwd}, name=#{name}, birth=#{birth}
+		, zip_num= #{zip_num},address1=#{address1}, address2=#{address2}
+		, email=#{email}, phone=#{phone} where id = #{id} 
+	</update>
+
+	<!-- 나라목록 -->
+	<select id="getCountry" resultType="string">
+		select country_kor from country
+	</select>
+</mapper>

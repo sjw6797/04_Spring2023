@@ -1,0 +1,31 @@
+@charset "UTF-8";
+
+#maincontent {
+	background-color: #05203c;
+	width: 100%;
+}
+
+#inputroute {
+	display: flex;
+	padding: 20px 0;
+}
+
+.inputcontent {
+	width: 200px; height: 70px; margin: 0 auto; background-color: white; border-radius: 20px 20px 20px 20px; padding: 10px;
+}
+
+.inputcontent label {
+	font-size: 110%; font-weight: bold; color: gray;
+}
+
+.inputcontent .content-input {
+	border: 0; border-bottom: 1px solid gray; height: 30px; outline: none; width: 200px; font-size: 120%;
+}
+
+#content.rollbanner {
+	margin: 50px auto;
+}
+
+.mainbanner2 {
+	width: 100%; height: 500px; border: 1px solid black;
+}

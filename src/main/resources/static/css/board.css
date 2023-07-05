@@ -1,0 +1,93 @@
+@charset "UTF-8";
+
+#sub_img {
+	width: 1000px; height: 300px; background-color: #e6e2df; margin: 20px auto; border-radius: 20px 20px 20px 20px;
+	overflow: hidden; width: 1000px;
+}
+
+.sub_text {
+	position: relative; float: left; margin: auto; top: 30%; font-weight: bold; font-size: 130%; line-height: 50px;
+	vertical-align: middle; left: 5%;
+}
+#sub_img {
+	width: 1000px; height: 250px; margin: 0 auto; border-radius: 20px 20px 20px 20px; background-size: cover;
+}
+
+#sub_menu {
+	position: absolute; text-align: left; width: 250px; float: left; z-index: 2;
+}
+
+#sub_menu ul {
+	list-style: none;
+}
+
+#sub_menu a {
+	text-decoration: none;
+}
+
+#sub_menu ul li a {
+	font-size: 20px;
+}
+
+#sub_menu ul li a:hover {
+	color: #007BFF; font-weight: bold;
+}
+
+.table_div {
+	display: flex; padding: 30px; height: 100px; width: auto; border: 1px solid #d9dbe1;
+}
+
+.table_div>.h3 {
+	font-weight: bold; font-size: 1.1rem; margin: 0;
+}
+
+.table_div>.table_keyword {
+	width: 800px; margin: 0 auto;
+}
+
+.table_div>.table_keyword>.keyword_board {
+	margin-top: 20px;
+}
+
+.table_div>.table_keyword>.keyword_board>.keyword_input {
+	position: absolute; display: flex; box-sizing: border-box; appearance: none; width: 600px; padding: 0;
+	border: 0; border-bottom: 1px solid #00256c; border-radius: 0; color: #000; font-size: 1.7rem; line-height: 1.5;
+	transition: border .2s .3s, color .2s .3s, box-shadow .2s .3s; outline: none;
+}
+
+.table_div>.table_keyword>.keyword_board>.keyword_submit {
+	background-color: #0064de; color: #fff; font-weight: 400; display: inline-block; text-decoration: none; text-align: center;
+	cursor: pointer; appearance: none; border-radius: 5px; border: 0; margin: 0; min-width: 30px;
+	padding: 0 3rem; font-size: 1.7rem; margin-left: 620px;
+}
+
+#tableList {
+	width: 100%; margin-top: 30px; border-collapse: collapse
+}
+#tableList tr {
+	height: 70px; border-bottom: 2px solid gray; cursor: pointer;
+}
+
+#tableList tr:hover {
+	color: red; background-color: #E2E2E2;
+}
+
+
+#tableList tr th {
+	width: 20%;
+}
+
+#tableList tr #maintd {
+	width: 60%;
+}
+
+.content_btn {
+	display: block; margin: 0 auto; padding: 15px 30px; background-color: #013066; color: white; font-weight: bold;
+	font-size: 140%; border-radius: 20px 20px 20px 20px; width: 200px; border: 0;
+}
+
+
+
+
+
+

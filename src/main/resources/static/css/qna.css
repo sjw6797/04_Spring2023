@@ -1,0 +1,164 @@
+@charset "UTF-8";
+
+#qna_sub_img {
+	width: 100%; height: 300px; background-image: url(/images/qnaList_logo.jpg); margin: 20px auto; border-radius: 20px 20px 20px 20px;
+	overflow: hidden; background-size: cover;
+}
+
+.qna_sub_text {
+	position: relative; float: left; margin: auto; top: 30%; font-weight: bold; font-size: 130%; line-height: 50px;
+	vertical-align: middle; left: 5%;
+}
+
+#sub_menu {
+	position: absolute; text-align: left; width: 250px; float: left; z-index: 2;
+}
+
+#sub_menu ul {
+	list-style: none;
+}
+
+#sub_menu a {
+	text-decoration: none;
+}
+
+#sub_menu ul li a {
+	font-size: 20px;
+}
+
+#sub_menu ul li a:hover {
+	color: #007BFF; font-weight: bold;
+}
+
+.table_div {
+	display: flex; padding: 30px; width:1290px;height: 100px; border: 1px solid #d9dbe1;float:left;
+}
+
+.qnaList_btn:hover{color: #007BFF; font-weight: bold;}
+.table_div>.h3 {
+	font-weight: bold; font-size: 1.1rem; margin: 0;
+}
+
+.table_div>.table_keyword {
+	width: 800px; margin: 0 auto;
+}
+
+.table_div>.table_keyword>.keyword_board {
+	margin-top: 20px;
+}
+
+.table_div>.table_keyword>.keyword_board>.keyword_input {
+	position: absolute; display: flex; box-sizing: border-box; appearance: none; width: 600px; padding: 0;
+	border: 0; border-bottom: 1px solid #00256c; border-radius: 0; color: #000; font-size: 1.7rem; line-height: 1.5;
+	transition: border .2s .3s, color .2s .3s, box-shadow .2s .3s; outline: none;
+}
+
+#tableList {
+	width: 100%; margin-top: 30px; border-collapse: collapse
+}
+#tableList tr {
+	height: 70px; border-bottom: 2px solid gray; cursor: pointer;
+}
+
+#tableList tr:hover {
+	color: blue; background-color: #E2E2E2;
+}
+
+
+#tableList tr th {
+	width: 20%;
+}
+
+#tableList tr #maintd {
+	width: 60%;
+}
+
+
+.clear {	clear: both; }
+.qnaList_btn{position:relative;width:150px; height:50px;border:1px solid #d9dbe1; background:white; color:black;float:right; cursor:pointer}
+#qnaList_btn1{margin: 0px auto}
+#qnaList_btn2{margin: 41px auto;}
+
+/* 게시물 디테일 css */
+.detail_title {	position:relative;	width: auto;	height: 50px;	border-bottom: 2px solid #00256c;	padding: 10px 0;}
+
+.detail_title>.h2 {	font-size: 140%;	font-weight: bold; }
+
+.detail_title>.span {	margin-left: 20px;}
+
+.detail_info{ position:relative;	width: auto;	height: 90px;	border-top: 2px solid #00256c;
+			/* padding: 20px 0; */ text-align: center;vertical-align: middle;}
+#detail_info2{	border-top:2px do #d9dbe1; }
+.detail_content {	width: auto; height:auto;	padding: 10px 0;	border-top: 4px solid #00256c;	border-bottom: 1px solid #d9dbe1;}
+
+.detail_content>pre {
+	font-size: 12pt;
+	font-family: sans-serif;
+}
+
+.content_btn {	float:right;	background: #00256c;	color: white;	border: 0;	margin:10px;	padding: 20px;	border-radius: 10px;
+			width: 150px;	font-weight: bold;	font-size: 120%;}
+
+.content_btn:hover {	color: black; }
+
+.detail_img {	display: block;	border: 0;	max-width: 700px;}
+
+.detail_reply {
+	margin: 30px 0;
+}
+
+.detail_box_h2{position:relative; float:left; width:203px; height:70px; margin:10px;border-right:2px solid #d9dbe1;text-align: center;line-height: 70px;font-size: 14pt;font-weight: bold;}
+.detail_box{position:relative; float:left; width:203px; height:70px; margin:10px;border-right:2px solid #d9dbe1;text-align: center;line-height: 70px;}
+.detail_box:last-child{position:relative; float:left; width:203px; border:none; height:70px; margin:10px;text-align: center;line-height: 70px;}
+
+/*qnaWriteForm*/
+
+.qna_title {
+	display: flex;
+	padding: 30px 0;
+	margin: 0 auto;
+}
+
+.qna_title_input {
+	width: 70%;
+	border: 0;
+	border-bottom: 1px solid black;
+	outline: none;
+	font-size: 130%;
+	font-weight: bold;
+	margin: 0 auto;
+}
+
+.qna_content {
+	display: flex;
+	padding: 30px 0;
+}
+
+.qna_content_text {
+	resize: none;
+	margin: 0 auto;
+	outline: none;
+}
+
+.h2 {
+	margin-left: 30px;
+}
+
+.qna_button {
+	position: relative;
+	display: block;
+	background-color: #013066;
+	padding: 10px;
+	color: white;
+	border-radius: 10px;
+	font-weight: bold;
+	border: 0;
+	float: right;
+	margin-right: 7%;
+}
+
+
+
+
+
+
