@@ -1,47 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../include/header.jsp"%>
-<script>
-function deleteMember(member_num) {
-	if (confirm("정말 삭제하시겠습니까?")) {
-		$.ajax({
-			url : "adminMemberDelete&member_num="
-					+ member_num,
-			type : "GET",
-			async : false,
-			success : function(message) {
-				if (message == "삭제를 실패했습니다") {
-					alert(message)
-				} else {
-					alert("삭제를 성공했습니다")
-					location.reload(true)
-				}
-			}
-		})
-	} else {
-		return false
-	}
-}
 
-function liveMember(member_num) {
-	if (confirm("계정을 복구하시겠습니까?")) {
-		$.ajax({
-			url : "adminMemberLive&member_num=" + member_num,
-			type : "GET",
-			async : false,
-			success : function(message) {
-				if (message == "복구를 실패했습니다") {
-					alert(message)
-				} else {
-					alert("복구를 성공했습니다")
-					location.reload(true)
-				}
-			}
-		})
-	} else {
-		return false
-	}
-}
-</script>
 <article>
 	<h1>유저관리 리스트</h1>
 	<div class="input_div">
@@ -79,8 +38,8 @@ function liveMember(member_num) {
 					<td>사용</td>
 				</c:if>
 				<td>
-					<input type="button" value="삭제" onclick="return deleteMember('${ memberVO.member_num }')">
-					<input type="button" value="복구" onclick="return liveMember('${ memberVO.member_num }')">
+					<input type="button" value="삭제" onclick="location.href='deleteMember?member_num=${memberVO.member_num}' ">
+					<input type="button" value="복구" onclick="location.href='useMember?member_num=${memberVO.member_num}' ">
 				</td>
 			</tr>
 		</c:forEach>

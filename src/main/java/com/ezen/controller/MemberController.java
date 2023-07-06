@@ -9,7 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
@@ -28,11 +28,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ezen.dto.BannerVO;
+import com.ezen.dto.BoardVO;
 import com.ezen.dto.KakaoProfile;
 import com.ezen.dto.KakaoProfile.KakaoAccount;
 import com.ezen.dto.KakaoProfile.KakaoAccount.Profile;
 import com.ezen.dto.MemberVO;
 import com.ezen.dto.OAuthToken;
+import com.ezen.dto.QnaVO;
 import com.ezen.flight_info.FlightInfoService;
 import com.ezen.service.MemberService;
 import com.google.gson.Gson;
@@ -45,12 +48,25 @@ public class MemberController {
 
 	@RequestMapping("/")
 	public String start(Model model) {
+
 		ArrayList<String> list = new ArrayList<String>();
 		FlightInfoService fs = new FlightInfoService();
-		list = fs.getAirPortId();
-		
-		model.addAttribute("countryList",list);
+		list = FlightInfoService.getAirPortId();
+
+		model.addAttribute("countryList", list);
+
+		List<BannerVO> bannerlist = ms.getBannerList();
+		model.addAttribute("bannerList", bannerlist);
+		model.addAttribute("size", bannerlist.size());
+
+		List<BoardVO> boardList = ms.getBoardList();
+		model.addAttribute("boardList", boardList);
+
+		List<QnaVO> qnaList = ms.getQnaList();
+		model.addAttribute("qnaList", qnaList);
+
 		return "index";
+
 	}
 
 	@RequestMapping("loginForm")
@@ -76,6 +92,8 @@ public class MemberController {
 			MemberVO mvo = ms.getMember(membervo.getId());
 			if (mvo == null) {
 				mav.addObject("message", "아이디가 존재하지 않습니다");
+			} else if (mvo.getUseyn().equals("N")) {
+				mav.addObject("message", "탈퇴된 아이디입니다");
 			} else if (!membervo.getPwd().equals(mvo.getPwd())) {
 				mav.addObject("message", "비밀번호가 틀렸습니다");
 			} else {

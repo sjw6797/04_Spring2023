@@ -10,8 +10,8 @@
 <script type="text/javascript" src="/script/member.js"></script>
 </head>
 <body>
-	<div class="login-container">
-		<h2>로그인</h2>
+	<div class="login-container" style="width: 400px;">
+		<h2 onclick="location.href='/' " style="cursor: pointer;">로그인</h2>
 		<form method="post" action="loginCheck" name="loginFrm">
 			<div class="form-group">
 				<label>아이디</label>
@@ -22,11 +22,13 @@
 				<input type="password" id="pwd" name="pwd">
 			</div>
 			<p>${message}</p>
-			<div class="form-group">
-				<input type="submit" value="로그인">
-				<input type="button" class="btn-secondary" id="login" value="회원가입" onclick="location.href='joinForm' ">
-				<input type="button" class="btn-secondary" id="login" value="카카오 회원가입" onclick="location.href='kakaostart' ">
-				<input type="button" class="btn-secondary" value="메인으로" onclick="location.href='/' ">
+			<div class="form-group" style="width: 300px; height: 45px; margin: 0 auto;">
+				<input type="submit" value="로그인" style="width: 300px; height: 45px;">
+				<input type="button" class="btn-secondary" id="login" value="회원가입" onclick="location.href='joinForm' " style="width: 300px; height: 45px;">
+				<img src="images/카카오로그인.png" onclick="location.href='kakaostart' " style="cursor: pointer;">
+				<!-- <input type="button" class="btn-secondary" id="login" value="카카오 회원가입" onclick="location.href='kakaostart' "> -->
+				
+				<!-- <input type="button" class="btn-secondary" value="메인으로" onclick="location.href='/' "> -->
 			</div>
 		</form>
 	</div>

@@ -1,12 +1,16 @@
 package com.ezen.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ezen.dao.IMemberDao;
+import com.ezen.dto.BannerVO;
+import com.ezen.dto.BoardVO;
 import com.ezen.dto.MemberVO;
+import com.ezen.dto.QnaVO;
 
 @Service
 public class MemberService {
@@ -37,4 +41,17 @@ public class MemberService {
 		result = mdao.getCountry();
 		return result;
 	}
+
+	public List<BannerVO> getBannerList() {
+		return mdao.getBannerList();
+	}
+
+	public List<BoardVO> getBoardList() {
+		return mdao.getBoardList();
+	}
+
+	public List<QnaVO> getQnaList() {
+		return mdao.getQnaList();
+	}
+
 }

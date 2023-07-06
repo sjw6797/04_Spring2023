@@ -37,19 +37,25 @@ $(function(){
 </script>
 <article>
 	<h1>공지사항 작성</h1>
-	<form name="frm" method="post" action="insertBoard">
+	<form name="frm" method="post" action="insertProduct">
 		<table class="adminTable">
 			<!-- 공지사항 작성 -->
 			<tr>
-				<th width="20%">제목</th>
+				<th width="20%">상품 제목</th>
 				<td style="text-align: left;">
 					<input type="text" name="title" id="title" style="width: 800px; height: 30px; outline: none; font-size: 130%; border: 0; border-bottom: 1px solid black;">
 				</td>
 			</tr>
 			<tr>
-				<th>내용</th>
+				<th>상품 설명</th>
 				<td style="text-align: left;">
 					<textarea name="content" rows="15" cols="80" id="content" style="font-size: 130%; resize: none;"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th>예상 가격</th>
+				<td style="text-align: left;">
+					<input type="number" name="price" id="price" style="width: 800px; height: 30px; outline: none; font-size: 130%; border: 0; border-bottom: 1px solid black;">
 				</td>
 			</tr>
 			<tr>

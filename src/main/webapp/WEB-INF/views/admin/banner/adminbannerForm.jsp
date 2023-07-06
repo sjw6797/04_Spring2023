@@ -36,20 +36,13 @@ $(function(){
 });
 </script>
 <article>
-	<h1>공지사항 작성</h1>
-	<form name="frm" method="post" action="insertBoard">
+	<h1>배너 작성</h1>
+	<form name="frm" method="post" action="insertBanner">
 		<table class="adminTable">
-			<!-- 공지사항 작성 -->
 			<tr>
-				<th width="20%">제목</th>
+				<th width="20%">이미지 제목</th>
 				<td style="text-align: left;">
-					<input type="text" name="title" id="title" style="width: 800px; height: 30px; outline: none; font-size: 130%; border: 0; border-bottom: 1px solid black;">
-				</td>
-			</tr>
-			<tr>
-				<th>내용</th>
-				<td style="text-align: left;">
-					<textarea name="content" rows="15" cols="80" id="content" style="font-size: 130%; resize: none;"></textarea>
+					<input type="text" name="name" id="name" style="width: 800px; height: 30px; outline: none; font-size: 130%; border: 0; border-bottom: 1px solid black;">
 				</td>
 			</tr>
 			<tr>
@@ -60,7 +53,7 @@ $(function(){
 				</td>
 			</tr>
 		</table>
-		<input type="submit" class="input_button" value="작성하기" style="background: rgb(0, 37, 108); float: right;" onclick="return boardCheck()">
+		<input type="submit" class="input_button" value="작성하기" style="background: rgb(0, 37, 108); float: right;" onclick="return bannerCheck()">
 		<input type="button" class="input_button" value="목록으로" onClick="history.back()" style="float: right;">
 	</form>
 	<div style="position:relative;  border:1px solid black; width:500px; margin:0 auto;">

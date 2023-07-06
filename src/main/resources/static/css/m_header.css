@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+@media ( max-width : 1000px) {
+	/* 모바일 페이지css */
+	#mainlogo {
+		width: 200px; margin: 0 auto; display: block;
+	}
+	
+	.head {
+		width: 90%;
+	}
+
+	.headul li,.headul li a {
+		font-size: 70%;
+	}
+	
+	#topmodel,#myPageDiv {
+		top: 130px;
+	}
+	
+}

@@ -22,6 +22,14 @@
 		, zip_num= #{zip_num},address1=#{address1}, address2=#{address2}
 		, email=#{email}, phone=#{phone} where id = #{id} 
 	</update>
+	
+	<select id="getBannerList" resultType="com.ezen.dto.BannerVO">select * from banner where oseq BETWEEN 1 and 5 </select>
+
+	<select id="getBoardList" resultType="com.ezen.dto.BoardVO">select * from board order by board_num desc </select>
+
+	<select id="getQnaList" resultType="com.ezen.dto.QnaVO">select * from qna order by qna_num desc </select>
+
+	<select id="getBannerListCount" resultType="com.ezen.dto.BannerVO">select count(*) from banner where oseq BETWEEN 1 and 5 </select>
 
 	<!-- 나라목록 -->
 	<select id="getCountry" resultType="string">

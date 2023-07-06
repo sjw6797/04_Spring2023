@@ -1,0 +1,70 @@
+@charset "UTF-8";
+
+@media ( max-width : 1000px) {
+	/* 모바일 페이지css */
+
+	#content {
+		width: 100%;
+	}
+	
+	#selectroute h1 {
+		font-size: 120%;
+	}
+	
+	#inputroute {
+		display: block; margin: 0 auto; width: 90%;
+	}
+	
+	#trip {
+		width: 90%;
+		margin: 0 auto;
+	}
+	
+	.inputcontent {
+		width: 100%;
+		margin-top: 20px;
+	}
+	#selectroute #h1 {
+		width: 90%; margin: 0 auto;
+	}
+	
+	.inputcontent:first-child {
+	margin-left: auto;
+	}
+	
+	.inputcontent:last-child {
+	margin-right: auto;
+	}
+	.mainbanner2,.rollbanner {
+		height: 300px;
+	}
+	.mainbanner2 img {
+		height: 300px;
+	}
+	#content_img {
+		width: 100%; margin: 50px auto;
+	}
+	
+	.bestimg {
+		display: block;
+		height: auto;
+	}
+	.bestimg .bestcontent {
+		width: 100%;
+		margin-bottom: 30px;
+	}
+	.detailimg {
+		height: 300px;
+	}
+	
+}
+
+@media ( max-width : 500px) {
+	/* 모바일 페이지css */
+	
+	#selectroute h1 {
+		font-size: 90%;
+	}
+
+
+}

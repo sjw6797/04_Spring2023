@@ -2,10 +2,11 @@
 <%@ include file="../include/header.jsp"%>
 
 <link type="text/css" rel="stylesheet" href="/css/board.css">
+
 <div id="content">
-<div id="sub_img" style="background-image: url('image/공지사항.png');">
-	<!-- <img alt="고객센터이미지" src="image/공지사항.png" style="float: right; display: block;"> -->
-</div>
+	<div id="sub_img" style="background-image: url(''); width: 100%; height: 300px;">
+		<img alt="고객센터이미지" src="https://flyasiana.com/C/pc/image/sub/img_customer_visual.png" width="70%" height="100%" style="float: right;">
+	</div>
 	<h2>공지사항</h2>
 	<form action="boardList" method="get">
 		<div class="table_div">
