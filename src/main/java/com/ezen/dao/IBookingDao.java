@@ -21,7 +21,7 @@ public interface IBookingDao {
 
 	ArrayList<ReservVO> getReserv2(HashMap<String, Object> paramMap);
 
-
+	
 
 	ArrayList<ReservVO> getPassenInfo(HashMap<String, Object> paramMap);
 
@@ -29,7 +29,16 @@ public interface IBookingDao {
 
 	void updatePassenInfo2(HashMap<String, Object> paramMap);
 
-	//신정우작성
-	ArrayList<ReservVO> getAirLine(String grade);
+	void deletePassenInfo1(HashMap<String, Object> paramMap);
+
+	void deletePassenInfo2(HashMap<String, Object> paramMap);
+
+	ArrayList<ReservVO> getPassenList();
+	
+	ArrayList<ReservVO> getReservAdmin(HashMap<String, Object> paramMap);
+
+	void deletePassenInfoInAdmin(HashMap<String, Object> paramMap);
+
+	
 	
 }

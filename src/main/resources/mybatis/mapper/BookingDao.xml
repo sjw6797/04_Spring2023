@@ -26,8 +26,9 @@
 	</select>
 	
 	
-	<select id=" getPassenInfo"  resultType="com.ezen.dto.ReservVO"  >  <!--  승객 개인정보 수정할때 SELECT로 개인정보 불러오기    -->
-		select #{r_name}, #{r_email}, #{r_phone} , #{r_gender}, #{r_class} from reservation where reserv_num=#{reservNum_return}
+	<select id="getPassenInfo"  resultType="com.ezen.dto.ReservVO"  >  <!--  승객 개인정보 수정할때 SELECT로 개인정보 불러오기    -->
+		select r_name, r_email, r_phone ,r_gender from reservation where reserv_num=#{reservNum_dep}
+		
 	</select>
 	
 	
@@ -41,11 +42,31 @@
 										      r_class=#{r_class} where reserv_num=#{reservNum_return}
 	</update>
 	
-	<!-- 신정우 작성 -->
-	<select id="getAirLine" resultType="com.ezen.dto.ReservVO">
-		select * from ${param1}
+	<delete id="deletePassenInfo1" >
+		delete from reservation where reserv_num=#{reservNum_dep}
+	</delete>
+	
+	
+	<delete id="deletePassenInfo2" >
+		delete from reservation where reserv_num=#{reservNum_return}
+	</delete>
+	
+	
+	
+	<select id="getPassenList"  resultType="com.ezen.dto.ReservVO"  >  <!--  in 관리자 : 예약정보들  -->
+		select * from reservation	
 	</select>
-	<!-- 신정우 작성 -->
+	
+	
+	<delete id="deletePassenInfoInAdmin" >
+		delete from reservation where reserv_num=#{reservNum}
+	</delete>
+	
+	
+	<select id="getReservAdmin"  resultType="com.ezen.dto.ReservVO"  >  <!--  in 관리자 : 예약정보들  -->
+		select * from reservation	where r_name=#{name} and r_phone=#{phone}
+	</select>
+	
 </mapper>
 
 

@@ -8,9 +8,7 @@
 <article>
 	<h1>예약변경 및 취소 규정</h1>
 	<!-- <form> -->
-	<form method="post" action="air.do" name="Frm">
-		<input type="hidden" name="command" value="reservDelete">
-
+	<form method="post" action="" >		
 
 		<h1>변경</h1>
 		<fieldset>
@@ -26,10 +24,23 @@
 
 		</fieldset>
 
-
-		<input type="submit" value="예약취소하기" class="submit" />
-
+        
+		<input type="buttons" value="예약취소하기" id="delete" class="submit" />
+		
+		
+		<input type="buttons" value="예약변경하기" id="update" class="submit" />
+		
+		
+		
 		<br> <br>
 
 	</form>
+	
+	
+	    <form method="post" action="updateReservForm" >		
+                <input type="submit" value="예약변경하기"  class="submit" />
+        </form>
+        
+        
+        
 </article>

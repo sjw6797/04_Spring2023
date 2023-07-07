@@ -67,184 +67,184 @@
 </style>
 
 <meta charset="UTF-8">
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
-$(function() {
-	$('#button').click(
-			function() {
-				
-				var reservNum_dep = $('#reservNum_dep').val();
-				var reservNum_return = $('#reservNum_return').val(); 
-				
-			    console.log(reservNum_dep/reservNum_return );
-				$.ajax({
-					url: 'updateReserv',
-					type: 'POST',
-					data: {
-						reservNum_dep: reservNum_dep,
-						reservNum_return: reservNum_return
-						
-					},
-					success: function(response) {
-						// Handle the response from the server
-						console.log(response);
-						// Redirect to a new page if necessary
-						window.location.href = 'newPage.html';
-					},
-					error: function(xhr, status, error) {
-						// Handle errors
-						console.log(error);
-					}
-				});
-			});
-		});
-			
+
+$(document).ready(function(){
+  $("#delete").click(function(event){
+    event.preventDefault();
+    var reservNum_return = $('#reservNum_return').val();
+    var reservNum_dep = $('#reservNum_dep').val();
+    $.post("deleteReserv", 
+      {
+        reservNum_return: reservNum_return,
+        reservNum_dep: reservNum_dep
+      },
+      function(data, status){
+       // alert("Data: " + data + "\nStatus: " + status);
+      }
+    );
+  });
+});
 
 
+
+
+$(document).ready(function(){
+  $("#regulation").click(function(event){
+    event.preventDefault();
+    var reservNum_return = $('#reservNum_return').val();
+    var reservNum_dep = $('#reservNum_dep').val();
+    $.post("regulation", 
+      {
+        reservNum_return: reservNum_return,
+        reservNum_dep: reservNum_dep
+      },
+      function(data, status){
+       // alert("Data: " + data + "\nStatus: " + status);
+      }
+    );
+  });
+});
 </script>
+
 
 <article>
 
 
 	<h3>예약 내역</h3>
 
-	<form method="post" action="updateReservForm">
+	<form method="post" action="">
 		
-
-		<table id="reservCheck" class="reservCheck">
-			<c:forEach items="${list1}" var="ReservVO" >
+		
+				<table id="reservCheck" class="reservCheck">
 			
-				<tr>
-					<th>예약날짜  </th>
-					<td>${ReservVO.indate}</td>
-				</tr>
-				
-				<tr>
-					<th>예약명(승객명)</th>
-					<td>${ReservVO.r_name}</td>
-				</tr>
-				
-				<tr>
-					<th>이메일</th>
-					<td>${ReservVO.r_email}</td>
-				</tr>
-				
-				<tr>
-					<th>성별 </th>
-					<td>${ReservVO.r_gender}</td>
-				</tr>
 				
 				
-				<tr>
-					<th>전화번호 </th>
-					<td>${ReservVO.r_phone}</td>
-				</tr>
-
-				<tr>
-					<th>출발일시</th>
-					<td>${ReservVO.dep_time}</td>
-				</tr>
-
-				<tr>
-					<th>출발지</th>
-					<td>${ReservVO.departures}</td>
-				</tr>
-
-
-
-				<tr>
-					<th>도착일시</th>
-					<td>${ReservVO.return_time}</td>
-				</tr>
-
-				<tr>
-					<th>도착지</th>
-					<td>${ReservVO.arrivals}</td>
-				</tr>
-
-
-				
-				<tr>
-					<th>이용항공사 </th>
-					<td>${ReservVO.airplane_name}</td>
-				</tr>
-				
-
-				
-				<tr>
-					<th>좌석등급 </th>
-					<td>${ReservVO.r_class}</td>
+					<c:forEach items="${list1}" var="ReservVO" >
 					
-				</tr>
-				<tr>
-					<th>예약번호  </th>
-					<td>${ReservVO.reserv_num}<input type="hidden" id="reservNum_dep" value="${ReservVO.reserv_num}"></td>
+						<tr>
+							<th>예약날짜  </th>
+							<td>${ReservVO.indate}</td>
+						</tr>
+						
+						<tr>
+							<th>예약명(승객명)</th>
+							<td>${ReservVO.r_name}</td>
+						</tr>
+						
+						<tr>
+							<th>이메일</th>
+							<td>${ReservVO.r_email}</td>
+						</tr>
+						
+						<tr>
+							<th>성별 </th>
+							<td>${ReservVO.r_gender}</td>
+						</tr>
+						
+						
+						<tr>
+							<th>전화번호 </th>
+							<td>${ReservVO.r_phone}</td>
+						</tr>
+		
+						<tr>
+							<th>출발일시</th>
+							<td>${ReservVO.dep_time}</td>
+						</tr>
+		
+						<tr>
+							<th>출발지</th>
+							<td>${ReservVO.departures}</td>
+						</tr>
+		
+		
+		
+						<tr>
+							<th>도착일시</th>
+							<td>${ReservVO.return_time}</td>
+						</tr>
+		
+						<tr>
+							<th>도착지</th>
+							<td>${ReservVO.arrivals}</td>
+						</tr>
+		
+		
+						
+						<tr>
+							<th>이용항공사 </th>
+							<td>${ReservVO.airplane_name}</td>
+						</tr>
+						
+		
+						
+						<tr>
+							<th>좌석등급 </th>
+							<td>${ReservVO.r_class}</td>
+							
+						</tr>
+						<tr>
+							<th>예약번호  </th>
+							<td>${ReservVO.reserv_num}<input type="hidden" id="reservNum_dep" value="${ReservVO.reserv_num}"></td>
+							
+						</tr>
+
+					</c:forEach>
 					
-				</tr>
-				
-			
-				
-
-			</c:forEach>
-			<c:forEach items="${list2}" var="ReservVO" >
-				<tr>
-					<th>출발일시</th>
-					<td>${ReservVO.dep_time}</td>
-				</tr>
-
-				<tr>
-					<th>출발지</th>
-					<td>${ReservVO.departures}</td>
-				</tr>
-
-
-
-				<tr>
-					<th>도착일시</th>
-					<td>${ReservVO.return_time}</td>
-				</tr>
-
-				<tr>
-					<th>도착지</th>
-					<td>${ReservVO.arrivals}</td>
-				</tr>
-
-
-				
-				<tr>
-					<th>이용항공사 </th>
-					<td>${ReservVO.airplane_name}</td>
-				</tr>
-				
-
-				
-				<tr>
-					<th>좌석등급 </th>
-					<td>${ReservVO.r_class}</td>
-				
-				</tr>
-				
-				<tr>
-					<th>예약번호  </th>
-					<td>${ReservVO.reserv_num}<input type="hidden" id="reservNum_return" value="${ReservVO.reserv_num}"></td>
 					
-				</tr>
-			
-				
-			
-			
-			</c:forEach>
-
-
-		</table>
+					<c:forEach items="${list2}" var="ReservVO" >
+						<tr>
+							<th>출발일시</th>
+							<td>${ReservVO.dep_time}</td>
+						</tr>
 		
+						<tr>
+							<th>출발지</th>
+							<td>${ReservVO.departures}</td>
+						</tr>
 		
+						<tr>
+							<th>도착일시</th>
+							<td>${ReservVO.return_time}</td>
+						</tr>
 		
-
+						<tr>
+							<th>도착지</th>
+							<td>${ReservVO.arrivals}</td>
+						</tr>
+	
+						
+						<tr>
+							<th>이용항공사 </th>
+							<td>${ReservVO.airplane_name}</td>
+						</tr>
+						
 		
-		<input type="submit" value="예약변경하기" class="submit"  id="button"/>
-
+						
+						<tr>
+							<th>좌석등급 </th>
+							<td>${ReservVO.r_class}</td>
+						
+						</tr>
+						
+						<tr>
+							<th>예약번호  </th>
+							<td>${ReservVO.reserv_num}<input type="hidden" id="reservNum_return" value="${ReservVO.reserv_num}"></td>
+							
+						</tr>
+					
+						
+					
+					
+					</c:forEach>
+		   
+				</table>
+		<input type="submit" value="예약변경하기" class="submit"  id="regulation"/>
+        <input type="submit" value="예약삭제하기" class="submit"  id="delete"/>
 
 
 

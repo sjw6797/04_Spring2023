@@ -28,122 +28,120 @@ public class BookingService {
 	@Autowired
 	IBookingDao bdao;
    
+    public HashMap<String, Object> getInfo(String depAirportNm, String arrAirportNm, String depPlandTime, String returnPlandTime ) {
+         
+         
+         HashMap<String, Object> result = new HashMap<String, Object>();
+         
+         // ♧♣♧♣ 가는날 일정 ♧♣♧♣
+            int totalCount1 = getTotalCount(depAirportNm, arrAirportNm, depPlandTime);   // 결과레코드 토탈 rowNum
+      
+            // 바로 위의 getTotalCount() 호출에서 결과가 0건인 경우에는 아래 if문만 실행하고 종료함
+            if (totalCount1 == 0) {
+               System.out.println("가는날 일정 :  출발지:" + depAirportNm + " / 도착지:" + arrAirportNm + " / 출발일자:" + depPlandTime);
+               System.out.println("지정한 조건에 대한 비행편이 존재하지 않습니다.");
+               result.put("list", "");
+               return result;
+            }
+            
+            FlightInfo depflightInfo = getFlightInfo(depAirportNm, arrAirportNm, depPlandTime, 1);
+            ArrayList<Item> flightItems1 = (ArrayList<Item>) depflightInfo.getResponse().getBody().getItems().getItem();
+            
+            System.out.println("가는날 일정 :  " + flightItems1);
+            
+            
+            
+            for (Item item : flightItems1) { 
+            	
+            	
+            	
+                System.out.println("항공사 : " + item.getAirlineNm());
+                System.out.println("출발지 : " + item.getDepAirportNm());
+                System.out.println("도착지 : " + item.getArrAirportNm());
+                
+                System.out.println("출발시간 : " + item.getDepPlandTime());
+                System.out.println("도착시간 : " + item.getArrPlandTime());
+                
+                
+                
+                System.out.println("일반석요금 : " + item.getEconomyCharge());
+                System.out.println("비즈니스석요금 : " + item.getPrestigeCharge());
+                System.out.println();
+                
+                
+                
+             }
+           
+            
+            
+         
+         // ♧♣♧♣ 돌아오는 일정 ♧♣♧♣
+            
+            int totalCount2 = getTotalCount(arrAirportNm, depAirportNm, returnPlandTime);   // 결과레코드 토탈 rowNum
+           
+            // 바로 위의 getTotalCount() 호출에서 결과가 0건인 경우에는 아래 if문만 실행하고 종료함
+            if (totalCount2 == 0) {
+               System.out.println("돌아오는날 일정 : 출발지:" + arrAirportNm + " / 도착지:" + depAirportNm + " / 출발일자:" +  returnPlandTime);
+               System.out.println("지정한 조건에 대한 비행편이 존재하지 않습니다.");
+               result.put("list", "");
+               return result;
+            }
+            
+            FlightInfo arrflightInfo = getFlightInfo(arrAirportNm, depAirportNm, returnPlandTime, 1);
+            ArrayList<Item> flightItems2 = (ArrayList<Item>) arrflightInfo.getResponse().getBody().getItems().getItem();
+            
+            System.out.println("오는날 일정 :  " +flightItems2);
+            
+            
+            
+            System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"); 
+            System.out.println("오는날 :  "); 
+            for (Item item : flightItems2) { 
+            	
+            	String DepPlandTime2 = String.valueOf(item.getDepPlandTime());
+            	String ArrPlandTime2 = String.valueOf(item.getArrPlandTime());
+            	
+                System.out.println("항공사 : " + item.getAirlineNm());
+                
+                System.out.println("출발지 : " + item.getDepAirportNm());
+                System.out.println("도착지 : " + item.getArrAirportNm());
+                
+                System.out.println("출발시간 : " + item.getDepPlandTime());
+                System.out.println("도착시간 : " + item.getArrPlandTime());
+                
+                System.out.println("String형 변환 출발시간 : " + DepPlandTime2);
+                System.out.println("String형 변환 도착시간 : " + ArrPlandTime2);
+                
+                System.out.println("일반석요금 : " + item.getEconomyCharge());
+                System.out.println("비즈니스석요금 : " + item.getPrestigeCharge());
+                System.out.println();
+                
+                
+                result.put("dep_list",flightItems1); //가는날
+                result.put("return_list",flightItems2); // 돌아오는날 
+                
+                result.put("depAirportNm", depAirportNm);
+                result.put("arrAirportNm", arrAirportNm);
+                
+                result.put("DepPlandTime2", DepPlandTime2);
+                result.put("ArrPlandTime2", ArrPlandTime2);
+                
+               
+             }
+            
+         return result;
+         // 하나의 FlightInfo 객체 안에는 최대 50개까지의 검색결과 건수가 담길 수 있으므로 아래 for문으로 회전하면서 하나씩 출력함
+         
+      }
+
+      
          // 주어진 출발지, 도착지, 출발일자 조건에 대한 검색결과 건수 값을 읽어옴
          // 내부적으로는 출발지, 도착지, 출발일자 외에 페이지 1로 지정하여 FlightInfo 객체를 가져와 거기에서 totalCount 값을 가져오는
          // 방식을 취한다. 주어진 검색조건에 대하여 검색결과가 0건이든 10건이든 또는 100건이든 기본적으로 1페이지의 결과는 반환하기 때문이다.
          // 다만, 서버에서 반환하는 Json 형식에 문제가 있어 0건일 때는 JsonSyntaxException이 발생하여 getFlightInfo()가
          // null을 반환받는 결과가 되므로 이에 주의해야 한다.
-	
-	  public HashMap<String, Object> getInfo(Item item, String flag ) {
-		  System.out.println("service38");
-	         //String depAirportNm, String arrAirportNm, Long depPlandTime, Long ReturnPlandTime
-	         HashMap<String, Object> result = new HashMap<String, Object>();
-	         String depAirportNm = item.getDepAirportNm();	// 출발공항
-	         String arrAirportNm = item.getArrAirportNm();	// 도착공항
-	         String depPlandTime = item.getDepPlandTime();	// 출발시간
-	         String ReturnPlandTime = item.getReturnPlandTime();	// 돌아오는 날짜         
-	         // 2가지의 경우를 생각 (단편, 왕복)
-	         // flag가 1인경우(단편) 
-	   if(flag.equals("1")) {
-		   System.out.println("service48");
-	        	// ♧♣♧♣ 가는날 일정 ♧♣♧♣
-	             int totalCount1 = getTotalCount(depAirportNm, arrAirportNm, depPlandTime);   // 결과레코드 토탈 rowNum
-	             
-	             // 바로 위의 getTotalCount() 호출에서 결과가 0건인 경우에는 아래 if문만 실행하고 종료함
-	             if (totalCount1 == 0) {
-	                System.out.println("가는날 일정 :  출발지:" + depAirportNm + " / 도착지:" + arrAirportNm + " / 가는날일자:" + depPlandTime);
-	                System.out.println("지정한 조건에 대한 비행편이 존재하지 않습니다.");
-	                result.put("message", "지정한 조건에 대한 비행편이 존재하지 않습니다.");
-	                return result;
-	             }
-	             
-	             FlightInfo depflightInfo = getFlightInfo(depAirportNm, arrAirportNm, depPlandTime, 1);
-	             List<Item> vihicleId = new ArrayList<>();
-	             
-	             ArrayList<Item> flightItems1 = (ArrayList<Item>) depflightInfo.getResponse().getBody().getItems().getItem();
-	             System.out.println("가는날 일정 :  " + flightItems1);
-	             System.out.println("가는날 :  "); 
-	             /*for (Item list : flightItems1) { 
-	                 System.out.println("항공사 : " + list.getAirlineNm());
-	                 System.out.println("출발지 : " + list.getDepAirportNm());
-	                 System.out.println("도착지 : " + list.getArrAirportNm());
-	                 System.out.println("출발시간 : " + list.getDepPlandTime());
-	                 System.out.println("도착시간 : " + list.getArrPlandTime());
-	                 System.out.println("일반석요금 : " + list.getEconomyCharge());
-	                 System.out.println("비즈니스석요금 : " + list.getPrestigeCharge());
-	                 System.out.println("비행편 코드 : " + list.getVihicleId());
-	                 System.out.println();
-	                 
-	                 
-	              }*/
-	             result.put("dep_list",flightItems1); //가는날
-	         
-	             
-	             
-	             
-	             
-	  }else {
-	        	// flag가 2인경우(왕복) 	
-	        	 
-	        	// ♧♣♧♣ 가는날 일정 ♧♣♧♣
-	             int totalCount1 = getTotalCount(depAirportNm, arrAirportNm, depPlandTime);   // 결과레코드 토탈 rowNum
-	             // 바로 위의 getTotalCount() 호출에서 결과가 0건인 경우에는 아래 if문만 실행하고 종료함
-	             if (totalCount1 == 0) {
-	                System.out.println("가는날 일정 :  출발지:" + depAirportNm + " / 도착지:" + arrAirportNm + " / 출발일자:" + depPlandTime);
-	                System.out.println("지정한 조건에 대한 비행편이 존재하지 않습니다.");
-	                result.put("message", "지정한 조건에 대한 비행편이 존재하지 않습니다.");
-	                return result;
-	             }
-	             FlightInfo depflightInfo = getFlightInfo(depAirportNm, arrAirportNm, depPlandTime, 1);
-	             ArrayList<Item> flightItems1 = (ArrayList<Item>) depflightInfo.getResponse().getBody().getItems().getItem();	//최종적으로 저장되는 리스트
-	             System.out.println("in service 가는날 일정 :  " + flightItems1);
-	             System.out.println("가는날 :  "); 
-	             for (Item list : flightItems1) { 
-	                 System.out.println("항공사 : " + list.getAirlineNm());
-	                 System.out.println("출발지 : " + list.getDepAirportNm());
-	                 System.out.println("도착지 : " + list.getArrAirportNm());
-	                 System.out.println("출발시간 : " + list.getDepPlandTime());
-	                 System.out.println("도착시간 : " + list.getArrPlandTime());
-	                 System.out.println("일반석요금 : " + list.getEconomyCharge());
-	                 System.out.println("비즈니스석요금 : " + list.getPrestigeCharge());
-	                 System.out.println();
-	              }
-	             System.out.println("---------------------------------------------------"+ReturnPlandTime);
-	        	// ♧♣♧♣ 돌아오는 일정 ♧♣♧♣
-	            int totalCount2 = getTotalCount(arrAirportNm, depAirportNm, ReturnPlandTime);   // 결과레코드 토탈 rowNum
-	            // 바로 위의 getTotalCount() 호출에서 결과가 0건인 경우에는 아래 if문만 실행하고 종료함
-	            if (totalCount2 == 0) {
-	               System.out.println("돌아오는날 일정 : 출발지:" + arrAirportNm + " / 도착지:" + depAirportNm + " / 출발일자:" +  ReturnPlandTime);
-	               System.out.println("지정한 조건에 대한 비행편이 존재하지 않습니다.");
-	               result.put("list", "");
-	               return result;
-	            }
-	            
-	            FlightInfo arrflightInfo = getFlightInfo(arrAirportNm, depAirportNm, ReturnPlandTime, 1);
-	            ArrayList<Item> flightItems2 = (ArrayList<Item>) arrflightInfo.getResponse().getBody().getItems().getItem();
-	            
-	            System.out.println("오는날 일정 :  " +flightItems2);
-	            System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"); 
-	            System.out.println("오는날 :  "); 
-	            for (Item list : flightItems2) { 
-	                System.out.println("항공사 : " + list.getAirlineNm());
-	                System.out.println("출발지 : " + list.getDepAirportNm());
-	                System.out.println("도착지 : " + list.getArrAirportNm());
-	                System.out.println("출발시간 : " + list.getDepPlandTime());
-	                System.out.println("도착시간 : " + list.getArrPlandTime());
-	                System.out.println("일반석요금 : " + list.getEconomyCharge());
-	                System.out.println("비즈니스석요금 : " + list.getPrestigeCharge());
-	                System.out.println();
-	            }
-	            result.put("dep_list",flightItems1); //가는날
-	            result.put("return_list",flightItems2); //오는날
-	       
-	        }
-	         result.put("depAirportNm", depAirportNm);
-	         result.put("arrAirportNm", arrAirportNm);
-	         return result;
-	 
-	      }      
+      
+      
       
          public static int getTotalCount(String depAirportNm, String arrAirportNm, String depPlandTime) {
 
@@ -234,7 +232,7 @@ public class BookingService {
 
 
 		public HashMap<String, Object> getReserv(String name, String phone) {
-		
+			
 			
 			HashMap<String, Object>result = new HashMap<String, Object>();
 			System.out.println("서비스 매개변수  :  " + name+" / "+phone);
@@ -244,36 +242,139 @@ public class BookingService {
 			
 			ArrayList <ReservVO> list1 = bdao.getReserv1(paramMap);
 			ArrayList <ReservVO> list2 = bdao.getReserv2(paramMap);
-			
 			System.out.println("가는날 일정 내역  :  " + list1);
 			System.out.println("오늘날 일정 내역  :  " + list2);
-		    
-			result.put("list1", list1);
-			result.put("list2", list2);
+
+            
+
+			if (list1 == null && list2 == null) {			    
+			    result.put("message", "예약내역이 존재하지 않습니다.");
+			} else {
+				result.put("list1", list1);
+				result.put("list2", list2);
+			}
+           
 			return result;
 		}
 
-
-	
-
-
-		public HashMap<String, Object> updatePassenInfo(String reservNum_return, String reservNum_dep) {
-			HashMap<String, Object>result = new HashMap<String, Object>();
-			HashMap<String,Object>paramMap = new HashMap<String, Object>();
-			paramMap.put("reservNum_return",reservNum_return);
-			paramMap.put("reservNum_dep",reservNum_dep);
-			
-			ArrayList <ReservVO> list = bdao.getPassenInfo(paramMap); // 화면에 출력할 용도
-			 bdao.updatePassenInfo1(paramMap);
-			 bdao.updatePassenInfo2(paramMap);
-			
-			// int countList= 
-			result.put("list", list);
-
-			return result;
-
-   }
 		
+		
+		
+		  public HashMap<String, Object> getInfo(Item item, String flag ) {
+         //String depAirportNm, String arrAirportNm, Long depPlandTime, Long ReturnPlandTime
+         HashMap<String, Object> result = new HashMap<String, Object>();
+         String depAirportNm = item.getDepAirportNm();	// 출발공항
+         String arrAirportNm = item.getArrAirportNm();	// 도착공항
+         String depPlandTime = item.getDepPlandTime();	// 출발시간
+         String ReturnPlandTime = item.getReturnPlandTime();	// 돌아오는 날짜         
+         // 2가지의 경우를 생각 (단편, 왕복)
+         // flag가 1인경우(단편) 
+   if(flag.equals("1")) {
+        	// ♧♣♧♣ 가는날 일정 ♧♣♧♣
+             int totalCount1 = getTotalCount(depAirportNm, arrAirportNm, depPlandTime);   // 결과레코드 토탈 rowNum
+             
+             // 바로 위의 getTotalCount() 호출에서 결과가 0건인 경우에는 아래 if문만 실행하고 종료함
+             if (totalCount1 == 0) {
+                System.out.println("가는날 일정 :  출발지:" + depAirportNm + " / 도착지:" + arrAirportNm + " / 가는날일자:" + depPlandTime);
+                System.out.println("지정한 조건에 대한 비행편이 존재하지 않습니다.");
+                result.put("message", "지정한 조건에 대한 비행편이 존재하지 않습니다.");
+                return result;
+             }
+             
+             FlightInfo depflightInfo = getFlightInfo(depAirportNm, arrAirportNm, depPlandTime, 1);
+             List<Item> vihicleId = new ArrayList<>();
+             
+             ArrayList<Item> flightItems1 = (ArrayList<Item>) depflightInfo.getResponse().getBody().getItems().getItem();
+             System.out.println("가는날 일정 :  " + flightItems1);
+             System.out.println("가는날 :  "); 
+             for (Item list : flightItems1) { 
+                 System.out.println("항공사 : " + list.getAirlineNm());
+                 System.out.println("출발지 : " + list.getDepAirportNm());
+                 System.out.println("도착지 : " + list.getArrAirportNm());
+                 System.out.println("출발시간 : " + list.getDepPlandTime());
+                 System.out.println("도착시간 : " + list.getArrPlandTime());
+                 System.out.println("일반석요금 : " + list.getEconomyCharge());
+                 System.out.println("비즈니스석요금 : " + list.getPrestigeCharge());
+                 System.out.println("비행편 코드 : " + list.getVihicleId());
+                 System.out.println();
+                 
+              }
+             result.put("dep_list",flightItems1); //가는날
+         
+             
+             
+             
+             
+  }else {
+        	// flag가 2인경우(왕복) 	
+        	 
+        	// ♧♣♧♣ 가는날 일정 ♧♣♧♣
+             int totalCount1 = getTotalCount(depAirportNm, arrAirportNm, depPlandTime);   // 결과레코드 토탈 rowNum
+             // 바로 위의 getTotalCount() 호출에서 결과가 0건인 경우에는 아래 if문만 실행하고 종료함
+             if (totalCount1 == 0) {
+                System.out.println("가는날 일정 :  출발지:" + depAirportNm + " / 도착지:" + arrAirportNm + " / 출발일자:" + depPlandTime);
+                System.out.println("지정한 조건에 대한 비행편이 존재하지 않습니다.");
+                result.put("message", "지정한 조건에 대한 비행편이 존재하지 않습니다.");
+                return result;
+             }
+             FlightInfo depflightInfo = getFlightInfo(depAirportNm, arrAirportNm, depPlandTime, 1);
+             ArrayList<Item> flightItems1 = (ArrayList<Item>) depflightInfo.getResponse().getBody().getItems().getItem();	//최종적으로 저장되는 리스트
+             System.out.println("in service 가는날 일정 :  " + flightItems1);
+             System.out.println("가는날 :  "); 
+             for (Item list : flightItems1) { 
+                 System.out.println("항공사 : " + list.getAirlineNm());
+                 System.out.println("출발지 : " + list.getDepAirportNm());
+                 System.out.println("도착지 : " + list.getArrAirportNm());
+                 System.out.println("출발시간 : " + list.getDepPlandTime());
+                 System.out.println("도착시간 : " + list.getArrPlandTime());
+                 System.out.println("일반석요금 : " + list.getEconomyCharge());
+                 System.out.println("비즈니스석요금 : " + list.getPrestigeCharge());
+                 System.out.println();
+              }
+        	 
+        	// ♧♣♧♣ 돌아오는 일정 ♧♣♧♣
+            int totalCount2 = getTotalCount(arrAirportNm, depAirportNm, ReturnPlandTime);   // 결과레코드 토탈 rowNum
+            // 바로 위의 getTotalCount() 호출에서 결과가 0건인 경우에는 아래 if문만 실행하고 종료함
+            if (totalCount2 == 0) {
+               System.out.println("돌아오는날 일정 : 출발지:" + arrAirportNm + " / 도착지:" + depAirportNm + " / 출발일자:" +  ReturnPlandTime);
+               System.out.println("지정한 조건에 대한 비행편이 존재하지 않습니다.");
+               result.put("list", "");
+               return result;
+            }
+            
+            FlightInfo arrflightInfo = getFlightInfo(arrAirportNm, depAirportNm, ReturnPlandTime, 1);
+            ArrayList<Item> flightItems2 = (ArrayList<Item>) arrflightInfo.getResponse().getBody().getItems().getItem();
+            
+            System.out.println("오는날 일정 :  " +flightItems2);
+            System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"); 
+            System.out.println("오는날 :  "); 
+            for (Item list : flightItems2) { 
+                System.out.println("항공사 : " + list.getAirlineNm());
+                System.out.println("출발지 : " + list.getDepAirportNm());
+                System.out.println("도착지 : " + list.getArrAirportNm());
+                System.out.println("출발시간 : " + list.getDepPlandTime());
+                System.out.println("도착시간 : " + list.getArrPlandTime());
+                System.out.println("일반석요금 : " + list.getEconomyCharge());
+                System.out.println("비즈니스석요금 : " + list.getPrestigeCharge());
+                System.out.println();
+            }
+            result.put("dep_list",flightItems1); //가는날
+            result.put("return_list",flightItems2); //오는날
+       
+        }
+         result.put("depAirportNm", depAirportNm);
+         result.put("arrAirportNm", arrAirportNm);
+         return result;
+ 
+      }
+    	 // 하나의 FlightInfo 객체 안에는 최대 50개까지의 검색결과 건수가 담길 수 있으므로 아래 for문으로 회전하면서 하나씩 출력함
+         // 주어진 출발지, 도착지, 출발일자 조건에 대한 검색결과 건수 값을 읽어옴
+         // 내부적으로는 출발지, 도착지, 출발일자 외에 페이지 1로 지정하여 FlightInfo 객체를 가져와 거기에서 totalCount 값을 가져오는
+         // 방식을 취한다. 주어진 검색조건에 대하여 검색결과가 0건이든 10건이든 또는 100건이든 기본적으로 1페이지의 결과는 반환하기 때문이다.
+         // 다만, 서버에서 반환하는 Json 형식에 문제가 있어 0건일 때는 JsonSyntaxException이 발생하여 getFlightInfo()가
+         // null을 반환받는 결과가 되므로 이에 주의해야 한다.
+
+
 		public int insertReserv1(HashMap<String, Object> paramMap1) {
 
 				int result =1;
@@ -283,16 +384,110 @@ public class BookingService {
 			
 		}
 
-		//신정우 작성
-		public ArrayList<ReservVO> getAirLine(String grade) {
-			ArrayList<ReservVO> result = new ArrayList<ReservVO>();
-			result = bdao.getAirLine(grade);
+
+		public HashMap<String, Object> getPassenInfo(String reservNum_dep) {
+			HashMap<String, Object>result = new HashMap<String, Object>();
+			HashMap<String,Object>paramMap = new HashMap<String, Object>();
+			paramMap.put("reservNum_dep",reservNum_dep);
+			ArrayList <ReservVO> list = bdao.getPassenInfo(paramMap); // 화면에 출력할 용도
+			System.out.println("IN 서비스 || 예약변경페이지에 뜨는 승객 개인정보 :  "+ list);
+			result.put("list", list);
+			return result;
+
+		}
+          
+		  
+		
+
+		public int updatePassenInfo(String reservNum_return, String reservNum_dep) {
+			
+			
+			int result =1;
+			HashMap<String,Object>paramMap = new HashMap<String, Object>();
+			paramMap.put("reservNum_return",reservNum_return);
+			paramMap.put("reservNum_dep",reservNum_dep);
+			
+			
+			bdao.updatePassenInfo1(paramMap);
+			bdao.updatePassenInfo2(paramMap);
+			
+			
+		
+
+			return result;
+
+   }
+
+
+		public int deletePassenInfo(String reservNum_return, String reservNum_dep) {
+			
+			int result=2;
+			HashMap<String,Object>paramMap = new HashMap<String, Object>();
+			paramMap.put("reservNum_return",reservNum_return);
+			paramMap.put("reservNum_dep",reservNum_dep);
+			bdao.deletePassenInfo1(paramMap);
+			bdao.deletePassenInfo2(paramMap);
+			return result;
+		}
+
+
+		public int deletePassenInfo1(String reservNum_dep) {
+			int result=1;
+			HashMap<String,Object>paramMap = new HashMap<String, Object>();
+			paramMap.put("reservNum_dep",reservNum_dep);
+			bdao.deletePassenInfo1(paramMap);
+			return result;
+		}
+
+
+		
+
+
+		public int deletePassenInfoInAdmin(String reservNum) {
+			int result=1;
+			HashMap<String,Object>paramMap = new HashMap<String, Object>();
+			paramMap.put("reservNum",reservNum);
+			bdao.deletePassenInfoInAdmin(paramMap);
 			
 			return result;
 		}
 		
-	//////////////////////
-          
-		  
+		public HashMap<String, Object> getPassenList() { // 관리자 테이블에서 승객목록 불러오기 
+			HashMap<String, Object>result = new HashMap<String, Object>();
+			ArrayList <ReservVO> list = bdao.getPassenList();
+			System.out.println("IN 서비스 || 관리자 페이지에 뜨는 예약정보들  :  "+ list);
+			if (list==null) {			    
+			    result.put("message", "예약내역이 존재하지 않습니다.");
+			} else {
+				result.put("passenlist", list);
+			
+			}
+			return result;
+		}
 		
+		
+public HashMap<String, Object> getReservAdmin(String name, String phone) {
+			
+			
+			HashMap<String, Object>result = new HashMap<String, Object>();
+			System.out.println("서비스 매개변수  :  " + name+" / "+phone);
+			HashMap<String,Object>paramMap = new HashMap<String, Object>();
+			paramMap.put("name", name);
+			paramMap.put("phone",phone);
+			
+			ArrayList <ReservVO> list = bdao.getReservAdmin(paramMap);
+			System.out.println(name+ "의일정 내역  :  " + list);
+
+			if (list == null ) {			    
+			    result.put("message", "예약내역이 존재하지 않습니다.");
+			} else {
+				result.put("passenlist", list);
+			
+			}
+           
+			return result;
+		}
+		
+		
+	
 }

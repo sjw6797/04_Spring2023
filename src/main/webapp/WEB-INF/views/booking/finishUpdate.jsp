@@ -48,7 +48,7 @@ div#title{
 <div id="page">
 	<form>
 		<div id="title">
-			<h1>결제완료 되셨습니다</h1>
+			<h1>변경완료 되셨습니다</h1>
 		</div>
 			<img src="images/check.jpg" width="170"> 
 		

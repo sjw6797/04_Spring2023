@@ -238,75 +238,45 @@ window.onload = function() {
 
 </script>
 <script>
-$(function() {
-	$('#nextButton').click(
-		function() {
-			
-			var name = $('#name').val();
-			var sit1 = $('#sit_1').val(); // 가는날 좌석 
-			var sit2 = $('#sit_2').val(); // 오는날 좌석
-			var email = $('#email').val();
-			var phone = $('#phone').val();					
-			var gender = $('#gender').val();
-		    var passenNum = $('#passenNum').val();
-		    var intPassenNum = parseInt(passenNum);
-		    
-		    console.log(name/ sit1/ sit2/ email/ phone/ gender/ passenNum );
-			if(intPassenNum > 1) {
-				// No redirection just reduce passenNum by 1
-				//$('#passenNum').val(intPassenNum - 1);
-				console.log("goto insertReservation_1" );
-				// Ajax call
-				$.ajax({
-					url: 'insertReservation_1',
-					type: 'POST',
-					data: {
-						name: name,
-						sit1: sit1,
-						sit2: sit2,
-						email: email,
-						phone: phone,
-						gender: gender,
-						passenNum: passenNum
-					},
-					success: function(response) {
-						// Handle the response from the server
-						console.log(response);
-					},
-					error: function(xhr, status, error) {
-						// Handle errors
-						console.log(error);
-					}
+	$(function() {
+		$('#nextButton').click(
+				function() {
+					
+					var name = $('#name').val();
+					var sit1 = $('#sit_1').val(); // 가는날 좌석 
+					var sit2 = $('#sit_2').val(); // 오는날 좌석
+					var email = $('#email').val();
+					var phone = $('#phone').val();					
+					var gender = $('#gender').val();
+				    var passenNum = $('#passenNum').val();
+				    console.log(name/ sit1/ sit2/ email/ phone/ gender/ passenNum );
+					$.ajax({
+						url: 'insertReservation',
+						type: 'POST',
+						data: {
+							name: name,
+							sit1: sit1,
+							sit2: sit2,
+							email: email,
+							phone: phone,
+							gender: gender,
+							passenNum: passenNum
+						},
+						success: function(response) {
+							// Handle the response from the server
+							console.log(response);
+							// Redirect to a new page if necessary
+							window.location.href = 'newPage.html';
+						},
+						error: function(xhr, status, error) {
+							// Handle errors
+							console.log(error);
+						}
+					});
 				});
-			} else {
-				console.log("goto insertReservation" );
-				// Redirect to a new page 
-				$.ajax({
-					url: 'insertReservation',
-					type: 'POST',
-					data: {
-						name: name,
-						sit1: sit1,
-						sit2: sit2,
-						email: email,
-						phone: phone,
-						gender: gender,
-						passenNum: passenNum
-					},
-					success: function(response) {
-						// Handle the response from the server
-						console.log(response);
-						// Redirect to a new page if necessary
-						window.location.href = 'newPage.html';
-					},
-					error: function(xhr, status, error) {
-						// Handle errors
-						console.log(error);
-					}
-				});
-			}
-		});
-	});
+			});
+				
+		
 </script>
 
 
@@ -385,7 +355,7 @@ $(function() {
 						&nbsp; <img src="images/humen.jpeg" width="50" height="40">
 						&nbsp;
 						<h4>
-							<strong> 승객${passenNum}&nbsp;명 <input type="hidden" name="passenNum"  value="${passenNum} "></strong>
+							<strong> 승객${passenNum}&nbsp;명</strong>
 						</h4>
 						&nbsp; &nbsp;
 						
@@ -436,105 +406,6 @@ $(function() {
 				</div>
 				
 				
-
-
-						<div id="timeInfo"> <!-- 오는날 --> <!-- 터미널 정보 --> <!-- 항공편 번호 -->
-
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<div class="timeInfo-wrapper">
-						<h4>
-							<strong>${depAirportNm2}</strong>
-						</h4>
-						&nbsp;&nbsp;&nbsp;
-						<h3>~</h3>
-						&nbsp;&nbsp;&nbsp;
-						<h4>
-							<strong>${arrAirportNm2}</strong>
-						</h4>
-						&nbsp;&nbsp;
-						<h3>||</h3>
-						&nbsp; &nbsp;
-
-						<h4>
-							<strong>${depPlandTime2}</strong>
-						</h4>
-						&nbsp; &nbsp;
-						<h3>||</h3>
-						
-						
-						<h4>
-							<strong>${arrPlandTime2}</strong>
-						</h4>
-						&nbsp; &nbsp;
-						<h3>||</h3>
-						
-						<h4>
-							<strong>${airlineNm2}</strong>
-						</h4>
-						
-						&nbsp; &nbsp;
-						<h3>||</h3>
-						&nbsp; <img src="images/humen.jpeg" width="50" height="40">
-						&nbsp;
-						<h4>
-							<strong> 승객${passenNum}&nbsp;명</strong>
-						</h4>
-						&nbsp; &nbsp;
-						<h4 class="price">
-						
-						<c:choose>
-								  <c:when test="${economyCharge2 ne null and economyCharge2 ne 0 }">
-								    <td>								      								      
-								       <strong>이코노미석:<fmt:formatNumber value="${economyCharge2}" pattern="₩ #,###" type="currency" currencySymbol="₩" /></strong>
-									   <input type="hidden" name="sit2"  value="이코노미석" >
-									   <input type="hidden" name="sit2_2"  value="${economyCharge2}" >
-								    </td>
-								  </c:when>
-								  
-								  <c:otherwise>
-								    <td>
-								      <span style="color: red;">매진</span>
-								      <input type="hidden" name="sit2"  value="매진" >
-									  <input type="hidden" name="sit2_2"  value="${economyCharge2}" >
-								    </td>
-								  </c:otherwise>
-							</c:choose>
-						
-						
-									
-						</h4>
-						&nbsp; &nbsp;
-					<h4 class="price">
-					
-					
-					<c:choose>
-								  <c:when test="${prestigeCharge2 ne null and prestigeCharge2 ne 0 }">
-								    <td>								      								      
-								       <strong>프레스티지석:<fmt:formatNumber value="${prestigeCharge2}" pattern="₩ #,###" type="currency" currencySymbol="₩" /></strong>
-									   <input type="hidden" name="sit2"  value="프레스티지석" >
-									   <input type="hidden" name="sit2_2"  value="${prestigeCharge2}" >
-								    </td>
-								  </c:when>
-								  
-								  <c:otherwise>
-								    <td>
-								      <span style="color: red;">매진</span>
-								      <input type="hidden" name="sit2"  value="매진" >
-									  <input type="hidden" name="sit2_2"  value="${prestigeCharge2}" >
-								    </td>
-								  </c:otherwise>
-							</c:choose>
-					
-						</h4>
-					</div>
-				</div>
-					
-
-		</div>
-</div>
-
-
-		<br> <br>
 
 	<br> <br>
 	<form action="finishReserv" method="post" >
