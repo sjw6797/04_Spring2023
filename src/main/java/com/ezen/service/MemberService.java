@@ -1,6 +1,7 @@
 package com.ezen.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,9 @@ import com.ezen.dao.IMemberDao;
 import com.ezen.dto.BannerVO;
 import com.ezen.dto.BoardVO;
 import com.ezen.dto.MemberVO;
+import com.ezen.dto.ProductVO;
 import com.ezen.dto.QnaVO;
+import com.ezen.dto.ReservVO;
 
 @Service
 public class MemberService {
@@ -52,6 +55,11 @@ public class MemberService {
 
 	public List<QnaVO> getQnaList() {
 		return mdao.getQnaList();
+	}
+
+	public List<ProductVO> getBestProduct() {
+		return mdao.getBestProduct();
+		
 	}
 
 }

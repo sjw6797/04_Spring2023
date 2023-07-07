@@ -100,9 +100,9 @@ $(function() {
 					<div class="inputcontent">
 						<label>출발지</label>
 						<input type="text" name="depAirportNm" id="search" list="searchOptions" class="content-input" style="width: 100%;"/>
-			            <datalist id="searchOptions" class="content-input" style="width: 100%;">
-			            	<c:forEach items="${countryList}" var="country">
-			            		<option value="${country}">
+			            <datalist id="searchOptions" class="content-input" style="padding-right: 300px;">
+			            	<c:forEach items="${countryList}" var="country">	
+			            		<option value="${country}" style="padding-right: 300px;">
 			                </c:forEach>
 			            </datalist>
 					</div>
@@ -149,49 +149,25 @@ $(function() {
 </div>
 
 <div id="content">
-	<h1 style="display: block;">인기여행지역</h1>
+	<h1 style="display: block;">인기 여행지</h1>
 	<div class="bestimg">
-		<div class="bestcontent">
-			<div class="detailimg">
-				<img src="https://t1.daumcdn.net/cfile/tistory/2314D84754D09D2F3F">
+		<c:forEach items="${productList}" var="dto" step="1" end="4">
+			<div class="bestcontent" onclick="location.href='productDetail?product_num=${dto.product_num}' ">
+				<div class="detailimg">
+					<!-- <img src="https://t1.daumcdn.net/cfile/tistory/2314D84754D09D2F3F"> -->
+					<img src="upload/${dto.image}">
+				</div>
+				<div class="detailtext">
+					<h3>${dto.title}</h3>
+				</div>
 			</div>
-			<div class="detailtext">
-				<h3>제주도 인기여행지!!~~</h3>
-				<h4>가격 : 3,000,000원</h4>
-			</div>
-		</div>
-		<div class="bestcontent">
-			<div class="detailimg">
-				<img src="images/어드민로고.png">
-			</div>
-			<div class="detailtext">
-				<h3>제주도 인기여행지!!~~</h3>
-				<h4>가격 : 3,000,000원</h4>
-			</div>
-		</div>
-		<div class="bestcontent">
-			<div class="detailimg">
-				<img src="images/카카오로그인.png">
-			</div>
-			<div class="detailtext">
-				<h3>제주도 인기여행지!!~~</h3>
-				<h4>가격 : 3,000,000원</h4>
-			</div>
-		</div>
-		<div class="bestcontent">
-			<div class="detailimg">
-				<img src="images/카카오로그인큰버전.png">
-			</div>
-			<div class="detailtext">
-				<h3>제주도 인기여행지!!~~</h3>
-				<h4>가격 : 3,000,000원</h4>
-			</div>
-		</div>
+			
+		</c:forEach>
 	</div>
 </div>
 
 <div id="content">
-	<h1 style="display: block;">인기여행지역</h1>
+	<h1 style="display: block;">테스트</h1>
 	<div class="bestimg">
 		<div class="bestcontent">
 			<div class="detailimg">

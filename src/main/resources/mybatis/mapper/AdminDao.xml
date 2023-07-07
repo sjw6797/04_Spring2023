@@ -3,22 +3,127 @@
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ezen.dao.IAdminDao">
-	
+
 	<select id="getAdmin" parameterType="com.ezen.dto.AdminVO">
 		select * from admin where id=#{param1}
 	</select>
-	
+
 	<select id="getAllCount" resultType="_int">
 		select count(*) from ${param1} where ${param2} like '%'||#{param3}||'%'
 	</select>
-	
+
 	<select id="listMember" resultType="com.ezen.dto.MemberVO">
-		select * from ( 
+		select * from (
 		select * from(
-			select rownum as rn, p.* from 
-			((select * from member where id like '%'||#{param2}||'%'   order by member_num desc) p )
-		) where rn &gt;= #{param1.startNum} 
-		) where rn &lt;= #{param1.endNum} 
+		select rownum as rn, p.* from
+		((select * from member where id like '%'||#{param2}||'%' order by useyn desc, member_num desc) p )
+		) where rn &gt;= #{param1.startNum}
+		) where rn &lt;= #{param1.endNum}
+	</select>
+
+	<select id="listBoard" resultType="com.ezen.dto.BoardVO">
+		select * from (
+		select * from(
+		select rownum as rn, p.* from
+		((select * from board where title like '%'||#{param2}||'%' order by board_num desc) p )
+		) where rn &gt;= #{param1.startNum}
+		) where rn &lt;= #{param1.endNum}
+	</select>
+
+	<select id="listBanner" resultType="com.ezen.dto.BannerVO">
+		select * from (
+		select * from(
+		select rownum as rn, p.* from
+		((select * from banner where name like '%'||#{param2}||'%' order by oseq desc, banner_num asc) p )
+		) where rn &gt;= #{param1.startNum}
+		) where rn &lt;= #{param1.endNum}
 	</select>
 	
+	<select id="listProduct" resultType="com.ezen.dto.ProductVO">
+		select * from (
+		select * from(
+		select rownum as rn, p.* from
+		((select * from product where title like '%'||#{param2}||'%' order by product_num desc) p )
+		) where rn &gt;= #{param1.startNum}
+		) where rn &lt;= #{param1.endNum}
+	</select>
+
+	<update id="deleteMember">
+		update Member set useyn='N' where member_num=#{param1}
+	</update>
+
+	<update id="useMember">
+		update Member set useyn='Y' where member_num=#{param1}
+	</update>
+
+	<insert id="insertBoard" parameterType="com.ezen.dto.BoardVO">
+		insert into board (board_num, title, content, image)
+		values (board_seq.nextval, #{title}, #{content}, #{image})
+	</insert>
+
+	<select id="getBoard" resultType="com.ezen.dto.BoardVO">
+		select * from board where board_num=#{param1}
+	</select>
+
+	<update id="updateBoard" parameterType="com.ezen.dto.BoardVO">
+		update board set title=#{title}, content=#{content}, image=#{image}
+		where board_num=#{board_num}
+	</update>
+
+	<delete id="deleteBoard">
+		delete from board where board_num=#{board_num}
+	</delete>
+
+	<insert id="insertBanner" parameterType="com.ezen.dto.BannerVO">
+		insert into banner(banner_num, name, image)
+		values(banner_seq.nextval, #{name}, #{image})
+	</insert>
+
+	<select id="getBannerOseq">
+		select count(*) from banner where oseq=${param1}
+	</select>
+
+	<update id="updateBanner" parameterType="com.ezen.dto.BannerVO">
+		update banner set oseq=#{oseq} where banner_num=#{banner_num}
+	</update>
+
+	<select id="selectBanner" resultType="_int">
+		select banner_num from banner where oseq=${param}
+	</select>
+	
+	<delete id="deleteBanner">
+		delete from banner where banner_num=#{banner_num}
+	</delete>
+	
+	<insert id="insertProduct" parameterType="com.ezen.dto.ProductVO">
+		insert into product (product_num, title, content, image, category)
+		values (product_seq.nextval, #{title}, #{content}, #{image}, #{category})
+	</insert>
+	
+	<update id="updateProduct" parameterType="com.ezen.dto.ProductVO">
+		update product set title=#{title}, content=#{content}, image=#{image}, category=#{category} 
+		where product_num=#{product_num}
+	</update>
+	
+	<select id="getProduct" resultType="com.ezen.dto.ProductVO">
+		select * from product where product_num=#{param1}
+	</select>
+	
+	<delete id="deleteProduct">
+		delete from product where product_num=${param1}
+	</delete>
+	
+	<select id="getBanner" resultType="com.ezen.dto.BannerVO">
+		select * from banner where banner_num=${param1}
+	</select>
+
 </mapper>
+
+
+
+
+
+
+
+
+

@@ -59,7 +59,7 @@ $(function(){
 					<input type="hidden" name="image" id="image" value="${dto.image}">
 	   				<div id="filename">
 	   					<div>${dto.image}</div>
-	   					<img src="images/${dto.image}" height="150"/>
+	   					<img src="upload/${dto.image}" height="150"/>
 	   				</div>
 				</td>
 			</tr>

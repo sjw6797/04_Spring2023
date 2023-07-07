@@ -8,7 +8,7 @@
 	})
 </script>
 <article>
-	<h1>상품리스트</h1>
+	<h1>인기 여행지 리스트</h1>
 	<form action="adminProductList">
 		<div class="input_div">
 			<input type="text" name="key" class="input_text" placeholder="제목을 입력하세요" value="${ key }">
@@ -25,16 +25,16 @@
 		</tr>
 		<c:forEach items="${productList}" var="productVO">
 			<tr>
-				<td>${ProductVO.product_num}</td>
+				<td>${productVO.product_num}</td>
 				<td>
-					<a href="adminBoardDetail?board_num=${ ProductVO.product_num }"> ${ProductVO.title}</a>
+					<a href="adminProductDetail?product_num=${ productVO.product_num }"> ${productVO.title}</a>
 				</td>
 				<td>
-					<fmt:formatDate value="${ProductVO.indate}" pattern="yyyy-MM-dd" />
+					<fmt:formatDate value="${productVO.indate}" pattern="yyyy-MM-dd" />
 				</td>
 				<td>
-					<input type="button" value="수정" onclick="location.href='adminProductUpdateForm?board_num=${ProductVO.product_num}' ">
-					<input type="button" value="삭제" onclick="location.href='adminProductDelete?board_num=${ProductVO.product_num}' ">
+					<input type="button" value="수정" onclick="location.href='adminProductUpdateForm?product_num=${productVO.product_num}' ">
+					<input type="button" value="삭제" onclick="location.href='adminProductDelete?product_num=${productVO.product_num}' ">
 				</td>
 			</tr>
 		</c:forEach>

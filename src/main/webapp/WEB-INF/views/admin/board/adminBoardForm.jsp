@@ -26,7 +26,7 @@ $(function(){
 	            if( data.STATUS == 1 ){  	// 동적으로 div태그 달아주기.
 	            	$("#filename").html("<div>"+data.FILENAME+"</div>");
 	            	$("#image").val(data.FILENAME);
-	            	$("#filename").append("<img src='images/"+data.FILENAME+"' height='150'/>");
+	            	$("#filename").append("<img src='upload/"+data.FILENAME+"' height='150'/>");
 	            }
 	        },
 	        error: function() {alert("실패");}

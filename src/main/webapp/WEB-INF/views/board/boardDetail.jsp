@@ -14,7 +14,7 @@
 		<c:if test="${ not empty dto.image }">
 			<img alt="이미지" src="upload/${dto.image}" class="detail_img">
 		</c:if>
-		<pre style="font-size: 150%; font-weight: bold;">${dto.content}</pre>
+		<pre style="font-size: 150%; font-weight: bold; white-space: normal;">${dto.content}</pre>
 	</div>
 	<button class="content_btn" onclick="history.back()">목록으로</button>
 </div>

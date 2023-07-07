@@ -35,4 +35,16 @@
 	<select id="getCountry" resultType="string">
 		select country_kor from country
 	</select>
+	
+	<select id="getBestTrip" resultType="com.ezen.dto.ReservVO">
+		  select * from (select arrivals,count(arrivals) as count from reservation 
+	      group by arrivals having count(arrivals) >=1) order by count desc
+	</select>
+	
+	<select id="getBestProduct" resultType="com.ezen.dto.ProductVO">
+		select * from view_bestProduct
+	</select>
+	
+	
+	
 </mapper>

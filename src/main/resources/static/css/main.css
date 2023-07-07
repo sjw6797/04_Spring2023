@@ -72,7 +72,7 @@
 }
 
 .bestcontent {
-	border: 1px solid blue; margin: 0 auto; width: 23%; position: relative;
+	border: 1px solid blue; margin-left: 2%; width: 23%; position: relative;
 	box-sizing: border-box; border-radius: 10px 10px; overflow: hidden;
 	cursor: pointer;
 }

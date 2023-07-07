@@ -19,8 +19,8 @@
 			<tr>
 				<th>내용</th>
 				<td style="text-align: left;">
-					<img src="images/${ dto.image }" width="300" onerror="this.style.display='none'">
-					<pre>${dto.content}</pre>
+					<img src="upload/${ dto.image }" width="300" onerror="this.style.display='none'">
+					<pre style="width: 100%; height: 100%;  white-space: pre-wrap; font-size: 150%;">${dto.content}</pre>
 				</td>
 			</tr>
 		</table>

@@ -35,8 +35,10 @@ import com.ezen.dto.KakaoProfile.KakaoAccount;
 import com.ezen.dto.KakaoProfile.KakaoAccount.Profile;
 import com.ezen.dto.MemberVO;
 import com.ezen.dto.OAuthToken;
+import com.ezen.dto.ProductVO;
 import com.ezen.dto.QnaVO;
 import com.ezen.flight_info.FlightInfoService;
+import com.ezen.service.AdminService;
 import com.ezen.service.MemberService;
 import com.google.gson.Gson;
 
@@ -54,6 +56,10 @@ public class MemberController {
 		list = FlightInfoService.getAirPortId();
 
 		model.addAttribute("countryList", list);
+
+		List<ProductVO> result = ms.getBestProduct();
+
+		model.addAttribute("productList", result);
 
 		List<BannerVO> bannerlist = ms.getBannerList();
 		model.addAttribute("bannerList", bannerlist);
@@ -294,7 +300,17 @@ public class MemberController {
 		}
 
 		return mav;
-
 	}
 
+	@Autowired
+	AdminService as;
+
+	@RequestMapping("productDetail")
+	public ModelAndView productDetail(@RequestParam("product_num") int product_num) {
+		ModelAndView mav = new ModelAndView();
+		ProductVO pvo = as.getProduct(product_num);
+		mav.addObject("dto", pvo);
+		mav.setViewName("product/productDetail");
+		return mav;
+	}
 }

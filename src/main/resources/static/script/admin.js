@@ -21,3 +21,25 @@ function bannerCheck() {
 		return true
 	}
 }
+
+function productCheck(productList) {
+	$('#formcontent').val($('#content').html())
+	
+	if ($('#title').val() == "") {
+		alert('상품 제목을 작성해주세요')
+		return false
+	} else if ($('#search').val() == "" || productList.indexOf($('#search').val()) < 1) {
+		alert('유효한 카테고리를 입력해주세요')
+		return false
+	} else if ($('#formcontent').val() == "") {
+		alert('상품 설명을 작성해주세요')
+		return false
+	} else if ($('#price').val() == "") {
+		alert('가격을 작성해주세요')
+		return false
+	} else {
+		return true
+	}
+}
+
+

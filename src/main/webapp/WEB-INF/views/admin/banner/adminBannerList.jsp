@@ -16,18 +16,16 @@
 			<input type="button" class="input_button" id="insert_banner" value="추가하기" style="position: absolute; background: #00256c;">
 		</div>
 	</form>
-	<p style="float: left;">이미 존재하는 번호로 순서를 교체하면 값이 서로 뒤바뀝니다.</p>
 		<table class="adminTable">
 			<tr>
 				<th>번호</th>
 				<th>배너이름</th>
-				<th>이미지</th>
 				<th>순서</th>
 				<th>비고</th>
 			</tr>
 			<c:forEach items="${bannerList}" var="dto">
-			<input type="hidden" name="old_oseq" value="${dto.oseq}">
 			<form action="updateBanner" method="post">
+			<input type="hidden" name="old_oseq" value="${dto.oseq}">
 			<input type="hidden" name="banner_num" value="${dto.banner_num}">
 			<c:choose>
 				<c:when test="${dto.oseq==-1}">
@@ -36,7 +34,6 @@
 					<td>
 						<a href="adminbannerDetail?banner_num=${ dto.banner_num }"  style="color: red;">${dto.name}</a>
 					</td>
-					<td style="color: red;">${dto.image}</td>
 					<td>
 						<select name="oseq">
 							<c:choose>
@@ -74,7 +71,6 @@
 					<td>
 						<a href="adminBannerDetail?banner_num=${ dto.banner_num }">${dto.name}</a>
 					</td>
-					<td>${dto.image}</td>
 					<td>
 						<select name="oseq">
 						<c:choose>
