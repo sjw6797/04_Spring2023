@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+
 <meta charset="UTF-8">
 <style>
 body {
@@ -40,12 +41,15 @@ h4 {
 div#route_scheule {
 	display: flex;
 	flex-wrap: wrap;
-	width: 100%;
+	width: 95%;
 	padding-bottom: 0px; /* get a space out of boxes*/
-	padding-top: 30px;
+	padding-top: 0;
 	padding-right: 50px;
 	background: #ffffff;
+	margin-top:0;
+	
 }
+
 
 div#route_scheule span {
 	display: flex;
@@ -56,19 +60,28 @@ div#route_scheule span {
 
 #timeInfo {
 	text-align: center;
-	width: 1200px; /*최대길이*/
+	width: 1000px; /*최대길이*/
 	padding-left: 20px;
 	padding-right: 0px;
 	padding-botton: 0px;
+	padding-top:0px;
+	margin-top:0;
 	border-radius: 0 10px 0 0;
 	display: flex;
 	align-items: center;
+	
+	
+
 }
 
 .timeInfo-wrapper {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	width:100%;
+	
+	
+
 }
 
 .timeInfo-wrapper img {
@@ -87,18 +100,24 @@ span#loaction {
 	background: #00256c;
 	width: 260px;
 	border-radius: 10px 10px 0 0;
+	padding-bottom: 0;
+	margin-bottom : 0;
+	
 }
 
 /* 승객 입력 폼*/
-#reservForm { /* 승객 입력 폼 + 좌석선택 */
-	display: flex;
+
+div#reservForm { 
+	/*display: flex;*/
 	background: #ffffff;
-	padding: 20px;
-	margin-bottom: 20px;
+	
+	margin-bottom: 0px;
+	margin-top: 20px;
 	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.05);
 	width: 100%;
-	border: 2px solid #00256c;
+	border: 1px solid #00256c;
 }
+
 
 /* 가격정보 */
 table {
@@ -123,42 +142,26 @@ table {
 	cursor: pointer;
 }
 
-/* 승객정보 폼 */
+
 #inputForm {
 	display: flex;
 	flex-direction: column;
-	margin: 10px; /* margin between reservForm(div) and inputForm(span)*/
-	border: 1px solid lightgray;
+	margin: 10px; 
+	
 	flex-grow: 1;
 	width: 60%;
-	padding-left: 0;
+	padding-left: 200px;
 	max-width: 500px;
-	height: 500px;
+	height: 600px;
 }
+
+
 
 #inputForm label { /* 승객폼 입력 란*/
 	width: 100px;
 }
 
-#reservForm {
-	display: flex;
-	flex-direction: column;
-	background: #ffffff;
-	padding: 20px;
-	margin-bottom: 20px;
-	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.05);
-	border-radius: 10px;
-	border: 2px solid #00256c;
-}
 
-#seatSelection {
-	margin-bottom: 20px;
-	order: 1;
-}
-
-#passengerForm {
-	order: 2;
-}
 
 #buttons {
 	order: 3;
@@ -187,9 +190,9 @@ input[type="text"] {
 	width: 30%;
 	padding: 10px;
 	margin: 10px 0;
-	border: 1px solid #ddd;
+	border: 1px solid #00256c;
 	border-radius: 4px;
-	border-color: #00256c;
+	
 }
 </style>
 
@@ -219,6 +222,12 @@ window.onload = function() {
                 console.log('Hidden input value2:', hiddenInputValue2.value);
                 document.getElementById('sit_2').value = this.querySelector('input[name="sit2"]').value;
                 console.log('오는날 좌석 :', this.querySelector('input[name="sit2"]').value);
+            }
+            
+            
+            if (price === 0 || isNaN(price)) {
+                alert('다른 좌석을 선택하세요.');
+                return; // 함수 실행 중지
             }
             
             totalAmount += price;
@@ -277,6 +286,18 @@ window.onload = function() {
 
 <article>
 
+
+
+  <div id="info_journey">
+			<h3 style="color: #ffffff;">
+				<strong>여정정보</strong>
+			</h3>
+
+  </div>
+		
+		
+  <div id="reservForm">
+		
 		<div id="route_scheule">
 			
 			<!-- first section -->
@@ -291,7 +312,7 @@ window.onload = function() {
 				</span>
 -->
 		
-				</br>
+			
 
 
 				<div id="timeInfo"> <!-- 가는날 --> <!-- 터미널 정보 --> <!-- 항공편 번호 -->
@@ -337,19 +358,55 @@ window.onload = function() {
 							<strong> 승객${passenNum}&nbsp;명</strong>
 						</h4>
 						&nbsp; &nbsp;
+						
 						<h4 class="price">
-							<strong>이코노미석: ${economyCharge1}</strong>
-							<input type="hidden" name="sit1"  value="이코노미석" >
-							<input type="hidden" name="sit1_1"  value="${economyCharge1}" >
+						<c:choose>
+								  <c:when test="${economyCharge1 ne null and economyCharge1 ne 0 }">
+								    <td>								      								      
+								       <strong>이코노미석 : <fmt:formatNumber value="${economyCharge1}" pattern="₩ #,###" type="currency" currencySymbol="₩" /></strong>
+									   <input type="hidden" name="sit1"  value="이코노미석" >
+									   <input type="hidden" name="sit1_1"  value="${economyCharge1}" >
+								    </td>
+								  </c:when>
+								  
+								  <c:otherwise>
+								    <td>
+								      <span style="color: red;">매진</span>
+								      <input type="hidden" name="sit1"  value="매진" >
+									  <input type="hidden" name="sit1_1"  value="${economyCharge1}" >
+								    </td>
+								  </c:otherwise>
+							</c:choose>
 						</h4>
+						
+		
+						
 						&nbsp; &nbsp;
 						<h4 class="price">
-							<strong>프레스티지석 : ${prestigeCharge1}</strong>
-							<input  type="hidden"name="sit1" value="프레스티지석" >
-							<input type="hidden" name="sit1_1" value="${prestigeCharge1}" >
+												
+							<c:choose>
+								  <c:when test="${prestigeCharge1 ne null and prestigeCharge1 ne 0 }">
+								    <td>								      								      
+								       <strong>프레스티지석 : <fmt:formatNumber value="${prestigeCharge1}" pattern="₩ #,###" type="currency" currencySymbol="₩" /></strong>
+									   <input type="hidden" name="sit1"  value="프레스티지석" >
+									   <input type="hidden" name="sit1_1"  value="${prestigeCharge1}" >
+								    </td>
+								  </c:when>
+								  
+								  <c:otherwise>
+								    <td>
+								      <span style="color: red;">매진</span>
+								      <input type="hidden" name="sit1"  value="매진" >
+									  <input type="hidden" name="sit1_1"  value="${prestigeCharge1}" >
+								    </td>
+								  </c:otherwise>
+							</c:choose>
 						</h4>
 					</div>
 				</div>
+				
+				
+
 
 						<div id="timeInfo"> <!-- 오는날 --> <!-- 터미널 정보 --> <!-- 항공편 번호 -->
 
@@ -394,24 +451,63 @@ window.onload = function() {
 						</h4>
 						&nbsp; &nbsp;
 						<h4 class="price">
-							<strong>이코노미석 : ${economyCharge2}<input type="hidden" name="sit2"  value="이코노미석" ></strong>
-							<input type="hidden" name="sit2_2"  value="${economyCharge2}" >
+						
+						<c:choose>
+								  <c:when test="${economyCharge2 ne null and economyCharge2 ne 0 }">
+								    <td>								      								      
+								       <strong>이코노미석:<fmt:formatNumber value="${economyCharge2}" pattern="₩ #,###" type="currency" currencySymbol="₩" /></strong>
+									   <input type="hidden" name="sit2"  value="이코노미석" >
+									   <input type="hidden" name="sit2_2"  value="${economyCharge2}" >
+								    </td>
+								  </c:when>
+								  
+								  <c:otherwise>
+								    <td>
+								      <span style="color: red;">매진</span>
+								      <input type="hidden" name="sit2"  value="매진" >
+									  <input type="hidden" name="sit2_2"  value="${economyCharge2}" >
+								    </td>
+								  </c:otherwise>
+							</c:choose>
+						
+						
+									
 						</h4>
 						&nbsp; &nbsp;
 					<h4 class="price">
-							<strong>프레스티지석: ${prestigeCharge2}<input  type="hidden"name="sit2" value="프레스티지석" ></strong>
-							<input type="hidden" name="sit2_2"  value="${prestigeCharge1}" >
+					
+					
+					<c:choose>
+								  <c:when test="${prestigeCharge2 ne null and prestigeCharge2 ne 0 }">
+								    <td>								      								      
+								       <strong>프레스티지석:<fmt:formatNumber value="${prestigeCharge2}" pattern="₩ #,###" type="currency" currencySymbol="₩" /></strong>
+									   <input type="hidden" name="sit2"  value="프레스티지석" >
+									   <input type="hidden" name="sit2_2"  value="${prestigeCharge2}" >
+								    </td>
+								  </c:when>
+								  
+								  <c:otherwise>
+								    <td>
+								      <span style="color: red;">매진</span>
+								      <input type="hidden" name="sit2"  value="매진" >
+									  <input type="hidden" name="sit2_2"  value="${prestigeCharge2}" >
+								    </td>
+								  </c:otherwise>
+							</c:choose>
+					
 						</h4>
 					</div>
 				</div>
-							
+					
 
 		</div>
+</div>
+
 
 		<br> <br>
 
 	<br> <br>
-	<form action="" method="post" >
+	<form action="finishReserv" method="post" >
 		
 
  
@@ -421,13 +517,15 @@ window.onload = function() {
 			</h3>
 
 		</div>
+		
+		
 		<div id="reservForm">
 			<!-- 2개 -->
 			<!--  2nd section -->
 
-		
-			<div id="passengerForm">
-				<fieldset>
+		   
+			
+				
 
 					
 							<label>&nbsp;이&nbsp;&nbsp;&nbsp;&nbsp;름 &nbsp;:
@@ -442,20 +540,23 @@ window.onload = function() {
 						<input name="email" type="text" id="email">
 				<br> <label>성별(F/M)&nbsp;:
 						&nbsp;&nbsp; </label><input name="gender" type="text" id="gender"><br>
-					<label>최종결제금액 &nbsp;: &nbsp;&nbsp; <input 
-						name="finalprice" id="finalprice"></label>
-				</fieldset>
+					<label>최종결제금액 &nbsp;: &nbsp;&nbsp;</label> <input 
+						name="finalprice" id="finalprice"><br>
+				
 
 
 
 					<input type="hidden" id="sit_1" name="sit_1" ><!-- 선택한 가는날 좌석 -->
 					<input type="hidden" id="sit_2" name="sit_2" ><!-- 선택한 오는날 좌석 -->
+					
+					
 				<div id="buttons">
 					<!-- <input type="submit" id="submitButton" value="예약하기" class="submit" /> -->
 					<input type="button" id="nextButton" value="다음으로" class="submit" />
 				</div>
-			</div>
 				
 		</div>
+	
+		
 	</form>
 </article>

@@ -28,5 +28,8 @@ public interface IBookingDao {
 	void updatePassenInfo1(HashMap<String, Object> paramMap);
 
 	void updatePassenInfo2(HashMap<String, Object> paramMap);
+
+	//신정우작성
+	ArrayList<ReservVO> getAirLine(String grade);
 	
 }

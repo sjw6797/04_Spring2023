@@ -7,7 +7,7 @@
 $(function() {
 	//input을 datepicker로 선언
 	$("#datepicker").datepicker({
-		dateFormat : 'yy-mm-dd' //달력 날짜 형태
+		dateFormat : 'yymmdd' //달력 날짜 형태
 		,
 		showOtherMonths : false //빈 공간에 현재월의 앞뒤월의 날짜를 표시
 		,
@@ -42,7 +42,7 @@ $(function() {
 $(function() {
 	//input을 datepicker로 선언
 	$("#datepicker2").datepicker({
-		dateFormat : 'yy-mm-dd' //달력 날짜 형태
+		dateFormat : 'yymmdd' //달력 날짜 형태
 		,
 		showOtherMonths : false //빈 공간에 현재월의 앞뒤월의 날짜를 표시
 		,
@@ -89,7 +89,7 @@ $(function() {
 </script>
 <link type="text/css" rel="stylesheet" href="/css/main.css">
 <link type="text/css" rel="stylesheet" href="/css/m_main.css">
-<form>
+<form action="flightInfo1" name="formm">
 	<div id="maincontent">
 		<div id="content" style="margin: 0 auto;">
 			<div id="selectroute">
@@ -117,18 +117,19 @@ $(function() {
 			            </datalist>
 					</div>
 					<div class="inputcontent">
-						<label>가는날짜</label>
+						<label>출발날짜</label>
 						<input type="text" name="depPlandTime" id="datepicker" class="content-input" style="width: 100%;" readonly>
 					</div>
 					<div class="inputcontent" id="comback">
-						<label>오늘날짜</label>
-						<input type="text" name="arrPlandTime" id="datepicker2" class="content-input" style="width: 100%;" readonly>
+						<label>오는날짜</label>
+						<input type="text" name="ReturnPlandTime" id="datepicker2" class="content-input" style="width: 100%;" readonly>
 					</div>
 					<div class="inputcontent">
 						<label>탑승인원</label>
 						<input type="number" name="passenNum" class="content-input" min="1" max="10" value="1" style="width: 100%;">
 					</div>
-					<div class="inputcontent" style="text-align: center; background-color: #0062e3; color: white; cursor: pointer; line-height: 60px; font-weight: bold; font-size: 140%;" onclick="">검색하기</div>
+					<div class="inputcontent" style="text-align: center; background-color: #0062e3; color: white; cursor: pointer; 
+					line-height: 60px; font-weight: bold; font-size: 140%;" onclick="submit();">검색하기</div>
 				</div>
 				<div id="trip">
 					<input type="radio" name="flag" value="2" checked="checked" onclick="roundtrip()">왕복

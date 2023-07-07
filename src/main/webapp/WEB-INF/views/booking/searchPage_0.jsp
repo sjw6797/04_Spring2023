@@ -5,8 +5,8 @@
 <article>
 
 
-<form method="post" action="flightInfo">
-	<input type="hidden" name="flag" value="2">
+<form method="post" action="air.do?command=flightInfo">
+
 출발지 : <input type = "text" name="depAirportNm">
 도착지 : <input type = "text" name="arrAirportNm">
 

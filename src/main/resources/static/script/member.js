@@ -85,3 +85,9 @@ $(function(){
 			$('.inputcontent').css({"width":"100%"})
 		}
 	}
+
+// 07/06 신정우 작성
+function submit(){
+	document.formm.submit();
+}
+//

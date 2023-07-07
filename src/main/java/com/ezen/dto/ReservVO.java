@@ -20,6 +20,16 @@ public class ReservVO {
     private String r_class;
     private String r_phone;
     private Timestamp indate;
+    
+    // airLine
+ 
+    private String vihicleid;
+    private String airline_name;
+    private String image;
+    private Integer economy_sit;
+    private Integer prestige_sit;
+    private Integer remain_economy;
+    private Integer remain_prestige;
 	
 	
 	

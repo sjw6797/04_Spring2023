@@ -106,11 +106,11 @@ $(function() {
 
 <article>
 
-	<!-- <form method="post" action="air.do?command=finishReserv" name="PassengerFrm"> -->
+
 	<h3>예약 내역</h3>
 
-	<form>
-		<input type="hidden" name="command" value="Reserv">
+	<form method="post" action="updateReservForm">
+		
 
 		<table id="reservCheck" class="reservCheck">
 			<c:forEach items="${list1}" var="ReservVO" >
@@ -242,8 +242,8 @@ $(function() {
 		
 		
 
-		<button id="button">예약변경하기 </button>
-
+		
+		<input type="submit" value="예약변경하기" class="submit"  id="button"/>
 
 
 

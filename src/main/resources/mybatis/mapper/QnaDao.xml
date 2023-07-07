@@ -43,4 +43,7 @@
 	<update id="updateQna" parameterType="com.ezen.dto.QnaVO">
 		update qna set title=#{title},content=#{content},imgfilename=#{imgfilename} where qna_num=#{qna_num}
 	</update>
+	<update id="addReply" >
+		update qna set reply=#{param2},result='Y' where qna_num=#{param1}
+	</update>
 </mapper>

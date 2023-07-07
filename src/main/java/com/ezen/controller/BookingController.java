@@ -1,6 +1,7 @@
 package com.ezen.controller;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ezen.dto.ReservVO;
 import com.ezen.flight_info.Item;
 import com.ezen.service.BookingService;
 
@@ -31,183 +33,166 @@ public class BookingController {
 	
 	@RequestMapping("searchForm")
 	public String joinForm() {
-		System.out.println("1");
-		return "booking/searchPage_0";
+		return "booking/searchPage_0.jsp";
 		
 	}
 	
-	//신정우작성-2023/07/05///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	@RequestMapping("flightInfo")// 출발지, 도착지, 날짜검색한걸 기반으로 노선리스트 출력  
-	 public String flightInfo1( @ModelAttribute("dto") @Valid Item item,BindingResult result,Model model, HttpServletRequest request,
-				@RequestParam(value="passenNum",required = false) String passenNum,@RequestParam(value="flag",required = false) String flag) {
-		
-		String url = "booking/routeList_1";
-		
-		if(result.getFieldError("depAirportNm") !=null)
-		model.addAttribute("message",result.getFieldError("depAirportNm").getDefaultMessage());
-		else if(result.getFieldError("arrAirportNm") !=null)
-		model.addAttribute("message",result.getFieldError("arrAirportNm").getDefaultMessage());
-		else {
+	//신정우작성-2023/07/05////////////// 
+	//옥솔비 수정 7/6
+		@RequestMapping("flightInfo1")// 출발지, 도착지, 날짜검색한걸 기반으로 노선리스트 출력    
+		 public String flightInfo1( @ModelAttribute("dto") @Valid Item item,BindingResult result,Model model, HttpServletRequest request,
+					@RequestParam(value="passenNum",required = false) String passenNum,@RequestParam("flag") String flag) {
+			System.out.println("123123" + item.getDepAirportNm());
+			System.out.println("123123" + item.getArrAirportNm());
+			System.out.println("123123" + item.getDepPlandTime());
+
 			HttpSession session = request.getSession();
-			HashMap<String, Object>list = new HashMap<String, Object>();
-			//우선 현재 넘어오는 플래그는 없으니 플래그를 1로 수동설정
-			flag="1";	// flag : 1 -> 편도 controller -> routeList_1 -> insertPassen
-						// flag : 2 -> 왕복 controller -> routeList_1(flag="3"가지고 감) -> Controller insertPassen
+			//세션에 저장되어있는 검색 결과 미리 삭제 -start
+			session.removeAttribute("economyList");
+			session.removeAttribute("prestigeList");
+			session.removeAttribute("airlineList");
+			session.removeAttribute("dep_list");
+			session.removeAttribute("depAirportNm");
+			session.removeAttribute("arrAirportNm");
+			//세션에 저장되어있는 검색 결과 미리 삭제 -end
+	
+			String url = "booking/routeList_1";
 			
-			// 출발일정 노선을 불러오기 
-			list = bs.getInfo(item,flag);
-			System.out.println( "출발하는날"+ list.get("dep_list") );
-			System.out.println("승객   " +  passenNum + "명");
+			if(result.getFieldError("depAirportNm") !=null)
+			model.addAttribute("message",result.getFieldError("depAirportNm").getDefaultMessage());
+			else if(result.getFieldError("arrAirportNm") !=null)
+			model.addAttribute("message",result.getFieldError("arrAirportNm").getDefaultMessage());
+			else {
+	
+				HashMap<String, Object>list = new HashMap<String, Object>();
+				
+				// 가는날 노선을 불러오기 
+				list = bs.getInfo(item,flag);
+				System.out.println( "in controller 가는날 일정 : "+ list.get("dep_list") );
+				System.out.println("승객   " +  passenNum + "명");
+				System.out.println("flag   : " +  flag);  
+				session.setAttribute("passenNum", passenNum);
 			
-			if(flag=="1") {	//편도인 경우
-				session.setAttribute("dep_list",list.get("dep_list") );
-				session.setAttribute("depAirportNm",list.get("depAirportNm") );
-				session.setAttribute("arrAirportNm",list.get("arrAirportNm") );
-				model.addAttribute("flag","1");
-			}else {	//왕복인 경우
-				session.setAttribute(flag, url);
-				session.setAttribute("dep_list",list.get("dep_list") );
-				session.setAttribute("return_list",list.get("return_list"));	
-				session.setAttribute("depAirportNm",list.get("depAirportNm") );
-				session.setAttribute("arrAirportNm",list.get("arrAirportNm") );
+				
+				if(flag.equals("1")) {	//편도인 경우  // 가는날 일정
+					 model.addAttribute("dep_list",  list.get("dep_list"));
+					 session.setAttribute("dep_list", list.get("dep_list"));
+					 
+					 session.setAttribute("flag", flag);
+					 System.out.println("in controller 편도  가는날 일정 : "+list.get("dep_list"));			
+
+					
+				}else {	//왕복인 경우  // 가는날 일정
+
+					model.addAttribute("dep_list", list.get("dep_list"));
+				    model.addAttribute("return_list", list.get("return_list"));
+			        session.setAttribute("dep_list", list.get("dep_list"));
+			        session.setAttribute("return_list", list.get("return_list"));
+			        
+			        session.setAttribute("flag", flag);
+			        System.out.println("in controller 왕복  가는날 일정 : "+list.get("dep_list"));
+			        System.out.println("in controller 왕복  오는날 일정 : "+ list.get("return_list"));
+	   				      
+
+				}
+				System.out.println("가는날 항공기편명:   " + item.getVihicleId());
+				
+				session.setAttribute("depAirportNm",item.getDepAirportNm());
+				session.setAttribute("arrAirportNm",item.getArrAirportNm());
+
+			// 이코노미/프레스티지 잔여좌석(table : view_economy,view_prestige) 출력-start
+				ArrayList<ReservVO> economyList = bs.getAirLine("view_economy");	//이코노미 좌석정보 조회
+				ArrayList<ReservVO> prestigeList = bs.getAirLine("view_prestige");	//프레스티지 좌석정보 조회
+				ArrayList<ReservVO> airlineList = bs.getAirLine("airline");			//항공사 정보 및 이미지 조회
+				
+				session.setAttribute("economyList", economyList);	// 세션에 담은 이유는 다음페이지에서 그대로 사용할 예정으로
+				session.setAttribute("prestigeList", prestigeList);	// 부하를 줄이기위해서
+				session.setAttribute("airlineList", airlineList);
+			// 이코노미/프레스티지 잔여좌석(table : view_economy,view_prestige) 출력-end
+
 			}
 			
-			System.out.println("가는날 항공기편명:   " + item.getVihicleId());
+			return url;
+	}
+	
+	
+		@RequestMapping("flightInfo2") // from "booking/routeList_1";
+		public String flightInfo2(HttpServletRequest request,
+									@RequestParam("depAirportNm") String depAirportNm1,
+					   			    @RequestParam("arrAirportNm") String arrAirportNm1,
+					   				@RequestParam("depPlandTime") String depPlandTime1,
+					   				@RequestParam("arrPlandTime") String arrPlandTime1,
+					   				@RequestParam("airlineNm") String airlineNm1,
+					   				@RequestParam("economyCharge") String economyCharge1,
+					   				@RequestParam("prestigeCharge") String prestigeCharge1,
+					   				@RequestParam("vihicleId") String vihicleId1
+													) {
+			HttpSession session = request.getSession();
+			String flag = (String) session.getAttribute("flag");
+			
+			session.setAttribute("depAirportNm1", depAirportNm1);
+		    session.setAttribute("arrAirportNm1", arrAirportNm1);
+		    session.setAttribute("depPlandTime1", depPlandTime1);
+		    session.setAttribute("arrPlandTime1", arrPlandTime1);
+		    session.setAttribute("airlineNm1", airlineNm1);
+		    session.setAttribute("economyCharge1", economyCharge1);
+		    session.setAttribute("prestigeCharge1", prestigeCharge1);
+		    session.setAttribute("vihicleId1", vihicleId1);
+		    
+			if(flag.equals("1")) {	// routeList_1로부터 flag값을 받는경우(편도라면)			
+				return "redirect:/insertPassen";			
+			}
+
+			return "booking/routeList_2";
+			
 		}
-		return url;
-}
-	@RequestMapping("flightInfo2")
-	public String flightInfo2( @RequestParam("flag") String flag) {
-		if(flag !=null) {
+		
+		@RequestMapping("flightInfo3")  // 왕복편 - 오는날 노선정보를 출력 // from "booking/routeList_2";
+		public String flightInfo3(  @ModelAttribute("dto") @Valid Item item,
+													BindingResult result,HttpServletRequest request,													
+													@RequestParam(value="passenNum",required = false) String passenNum,													
+													Model model) {
+			
+			HttpSession session = request.getSession();
+			String flag = (String) session.getAttribute("flag");
+		
+			if(flag.equals("1")) {	
+				if(result.getFieldError("depAirportNm1") !=null)
+					model.addAttribute("message",result.getFieldError("depAirportNm1").getDefaultMessage());
+					else if(result.getFieldError("arrAirportNm1") !=null)
+					model.addAttribute("message",result.getFieldError("arrAirportNm1").getDefaultMessage());
+					else {
+								
+							HashMap<String, Object>list = new HashMap<String, Object>();
+
+							// 오는날 노선을 불러오기 
+							list = bs.getInfo(item,flag);
+							System.out.println( "오는날"+ list.get("dep_list") );
+							System.out.println("승객   " +  passenNum + "명");
+							
+							HashMap<String, Object>paramMap = new HashMap<String, Object>();
+			
+						
+								// 오는날 일정 
+								
+							paramMap.put("depAirportNm2", list.get("depAirportNm"));
+							paramMap.put("arrAirportNm2", list.get("arrAirportNm"));
+							paramMap.put("depPlandTime2", list.get("depPlandTime"));
+							paramMap.put("arrPlandTime2", list.get("arrPlandTime"));
+							paramMap.put("airlineNm2", list.get("airlineNm"));
+							paramMap.put("economyCharge2", list.get("economyCharge"));
+							paramMap.put("prestigeCharge2", list.get("prestigeCharge"));
+							System.out.println("왕복 오는날 일정 : "+paramMap);		
+							model.addAttribute("return_list", paramMap);
+	   				        session.setAttribute("return_list", paramMap);
+
+				
+			          }
+				
+			}
+		
 			return "redirect:/insertPassen";
 		}
-		return "booking/routeList_2";
-	}
-	
-	
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*	
-	@RequestMapping("flightInfo1")
-	// 출발지, 도착지, 날짜검색한걸 기반으로 노선리스트 출력  
-	
-	// 가는날 노선 
-	   public String flightInfo1( @ModelAttribute("dto") @Valid Item item,BindingResult result,Model model, HttpServletRequest request,
-			   												@RequestParam("passenNum") String passenNum  ) {
-	      
-	      if(result.getFieldError("depAirportNm") !=null)
-	         model.addAttribute("message",result.getFieldError("depAirportNm").getDefaultMessage());
-	      else if(result.getFieldError("arrAirportNm") !=null)
-	         model.addAttribute("message",result.getFieldError("arrAirportNm").getDefaultMessage());
-	      else {
-	        
-	    	  HttpSession session = request.getSession();
-		    	 String depAirportNm = item.getDepAirportNm(); // 출발 공항명 가져오기
-		    	 String arrAirportNm = item.getArrAirportNm(); // 도착 공항명 가져오기
-		    	 Long depPlandTime = item.getDepPlandTime(); //가는날 
-		    	 Long returnPlandTime = item.getReturnPlandTime(); // 오는날 
-		    	 String airPlaneId1 = item.getVihicleId(); // 가는날 항공기 ID
-
-		    	 session.setAttribute("depAirportNm", depAirportNm); // 세션 속성에 출발 공항명 설정
-		    	 session.setAttribute("arrAirportNm", arrAirportNm); // 
-		    	 session.setAttribute("depPlandTime", depPlandTime); // 
-		    	 session.setAttribute("returnPlandTime", returnPlandTime); // 
-		    	 session.setAttribute("passenNum", passenNum); //
-		    	 session.setAttribute("airPlaneId1", airPlaneId1); // 가는날 항공기 ID
-		    	
-	    	 
-	         HashMap<String, Object>list = new HashMap<String, Object>();
-	        
-	         
-	         // 출발일정 노선을 불러오기 
-	         list = bs.getInfo(depAirportNm,arrAirportNm,depPlandTime, returnPlandTime);
-	         System.out.println( "출발하는날"+ list.get("dep_list") );
-	         System.out.println("승객   " +  passenNum + "명");
-	         
-	         
-	         System.out.println("가는날 항공기편명:   " +  airPlaneId1);
-	         model.addAttribute("dep_list",list.get("dep_list") );
-	         
-	        
-	          model.addAttribute("depAirportNm",list.get("depAirportNm") );
-	          model.addAttribute("arrAirportNm",list.get("arrAirportNm") );
-	       
-	         
-	      }
-	      return "booking/routeList_1";
-	}
-	
-	
-	@PostMapping("flightInfo2")
-	// 출발지, 도착지, 날짜검색한걸 기반으로 노선리스트 출력  
-	
-	// 오는날 노선 
-	   public String flightInfo2( @ModelAttribute("dto") @Valid Item item,
-			   				BindingResult result,Model model,
-			   				HttpServletRequest request,
-			   				@RequestParam("depAirportNm") String depAirportNm1,
-			   			    @RequestParam("arrAirportNm") String arrAirportNm1,
-			   				@RequestParam("depPlandTime") String depPlandTime1,
-			   				@RequestParam("arrPlandTime") String arrPlandTime1,
-			   				@RequestParam("airlineNm") String airlineNm1,
-			   				@RequestParam("economyCharge") String economyCharge1,
-			   				@RequestParam("prestigeCharge") String prestigeCharge1
-			   				) {
-	      
-	      if(result.getFieldError("depAirportNm") !=null)
-	         model.addAttribute("message",result.getFieldError("depAirportNm").getDefaultMessage());
-	      else if(result.getFieldError("arrAirportNm") !=null)
-	         model.addAttribute("message",result.getFieldError("arrAirportNm").getDefaultMessage());
-	      else {
-	        
-	    	  HttpSession session = request.getSession();
-		    	 String depAirportNm = (String) session.getAttribute("depAirportNm"); // 출발 공항명 가져오기
-		    	 String arrAirportNm = (String) session.getAttribute("arrAirportNm");// 도착 공항명 가져오기
-		    	 Long depPlandTime = (Long) session.getAttribute("depPlandTime");//가는날 
-		    	 Long returnPlandTime = (Long) session.getAttribute("returnPlandTime");// 오는날 
-		    	 
-		    	 String airPlaneId2 = item.getVihicleId();  // 오는날 항공기 ID
-		    	 session.setAttribute("airPlaneId1", airPlaneId2); // 오는날 항공기 ID
-		    	 System.out.println("오는날 항공기편명:   " +  airPlaneId2);
-		    	 
-		    // 가는날 노선일정을 세션에 저장하기 
-		    	 
-		    	 session.setAttribute("depAirportNm1", depAirportNm1); // 출발지 
-		    	 session.setAttribute("arrAirportNm1", arrAirportNm1); // 도착지 
-		    	 session.setAttribute("depPlandTime1", depPlandTime1); // 출발일시 
-		    	 session.setAttribute("arrPlandTime1", arrPlandTime1); // 도착일시 
-		    	 session.setAttribute("airlineNm1", airlineNm1); //  항공사 이름 
-		    	 session.setAttribute("economyCharge1", economyCharge1); // 이코노미석 
-		    	 session.setAttribute("prestigeCharge1", prestigeCharge1); // 프레스티지석 
-		    	 
- 
-	         HashMap<String, Object>list = new HashMap<String, Object>();
-	        
-	         
-	      // 돌아오는날 일정 노선을 불러오기 
-	         list = bs.getInfo(depAirportNm,arrAirportNm,depPlandTime, returnPlandTime);
-	        
-	         
-	       	  System.out.println("돌아오는날"+list.get("return_list") );
-	       	  
-	       	  System.out.println("가는날 일정 : "+depAirportNm1+""+arrAirportNm1 +""+ depPlandTime1+""+ arrPlandTime1+""+ airlineNm1+""+ economyCharge1+""+prestigeCharge1);
-	          model.addAttribute("return_list",list.get("return_list") );
-	          model.addAttribute("depAirportNm",list.get("depAirportNm") );
-	          model.addAttribute("arrAirportNm",list.get("arrAirportNm") );
-	          
-	          
-	          model.addAttribute("depAirportNm1", depAirportNm1); // 출발지 
-	          model.addAttribute("arrAirportNm1", arrAirportNm1); // 도착지 
-	          model.addAttribute("depPlandTime1", depPlandTime1); // 출발일시 
-	          model.addAttribute("arrPlandTime1", arrPlandTime1); // 도착일시 
-	          model.addAttribute("airlineNm1", airlineNm1); //  항공사 이름 
-	          model.addAttribute("economyCharge1", economyCharge1); // 이코노미석 
-	          model.addAttribute("prestigeCharge1", prestigeCharge1); // 프레스티지석 
-	       
-	         
-	      }
-	      return "booking/routeList_2";
-	}
-*/	
 	
 	
 	@PostMapping("insertPassen") 
@@ -215,89 +200,73 @@ public class BookingController {
 	// 결제를 완료하고 나서 선택한 노선을 저장함 
 	// 그전에는 세션에 보관 
 	// 좌석정보 알려주기 (일반석 잔여좌석 :00개, 프레스티지석 잔여좌석 :00개)
-     public ModelAndView insertPassen (HttpServletRequest request,@ModelAttribute("dto") @Valid Item item,
-    		
-																		@RequestParam("depAirportNm") String depAirportNm2,
-																	    @RequestParam("arrAirportNm") String arrAirportNm2,
-																		@RequestParam("depPlandTime") String depPlandTime2,
-														   				@RequestParam("arrPlandTime") String arrPlandTime2,
-																		@RequestParam("airlineNm") String airlineNm2,
-																		@RequestParam("economyCharge") String economyCharge2,
-																		@RequestParam("prestigeCharge") String prestigeCharge2) {
-		
-		ModelAndView mav = new ModelAndView();
-		HttpSession session = request.getSession();
-		/*
-		MemberVO mvo = (MemberVO) session.getAttribute("loginUser");
-		
-		if(mvo == null ) {
-			
-			mav.setViewName("loginForm");
-			
-		} else {
-			*/
-			//1. 가는날 노선을 불러오기 
-			
-	
-    	 String depAirportNm1 = (String) session.getAttribute("depAirportNm1"); // 출발 공항명 가져오기
-    	 String arrAirportNm1 = (String) session.getAttribute("arrAirportNm1");// 도착 공항명 가져오기
-    	 String depPlandTime1 = (String) session.getAttribute("depPlandTime1");//가는날 
-    	 String arrPlandTime1 =  (String) session.getAttribute("arrPlandTime1");// 오는날 
-    	 String airlineNm1= (String) session.getAttribute("airlineNm1"); // 이용항공사 이름 
-    	 String  economyCharge1= (String) session.getAttribute("economyCharge1"); // 이코노미석 
-    	 String prestigeCharge1 = (String) session.getAttribute("prestigeCharge1"); // 프레스티지석 
-    	 
-    	
-		
-		
-		//1-1. 오는날 노선을 세션에 저장하기 
-    	 
-    	 session.setAttribute("depAirportNm2", depAirportNm2); // 출발지 
-    	 session.setAttribute("arrAirportNm2", arrAirportNm2); // 도착지 
-    	 session.setAttribute("depPlandTime2", depPlandTime2); // 출발일시 
-    	 session.setAttribute("arrPlandTime2", arrPlandTime2); // 도착일시  	 
-    	 session.setAttribute("airlineNm2", airlineNm2); //  항공사 이름 
-    	 session.setAttribute("economyCharge2", economyCharge2); // 이코노미석 
-    	 session.setAttribute("prestigeCharge2", prestigeCharge2); // 프레스티지석 
-    	
-    	
+     public ModelAndView insertPassen (HttpServletRequest request,
+    		    @RequestParam("depAirportNm") String depAirportNm1,
+			    @RequestParam("arrAirportNm") String arrAirportNm1,
+				@RequestParam("depPlandTime") String depPlandTime1,
+				@RequestParam("arrPlandTime") String arrPlandTime1,
+				@RequestParam("airlineNm") String airlineNm1,
+				@RequestParam("economyCharge") String economyCharge1,
+				@RequestParam("prestigeCharge") String prestigeCharge1,
+				@RequestParam("vihicleId") String vihicleId1) {
+		         
+					ModelAndView mav = new ModelAndView();
+					HttpSession session = request.getSession();						
+					HashMap<String,Object>paramMap = new HashMap<String,Object>();
 					
-		//2. 선택한 노선을 화면에 출력하기 
+		
+					String flag=(String) session.getAttribute("flag");
 					
-    	 // 가는날 
-    	 
-    	 HashMap<String,Object>paramMap = new HashMap<String,Object>();
-    	 paramMap.put("depAirportNm1",depAirportNm1 );
-    	 paramMap.put("arrAirportNm1",arrAirportNm1  );
-    	 paramMap.put("depPlandTime1",depPlandTime1);
-    	 paramMap.put("arrPlandTime1",arrPlandTime1 );
-    	 paramMap.put("airlineNm1",airlineNm1 );
-    	 paramMap.put("economyCharge1", economyCharge1);
-    	 paramMap.put("prestigeCharge1", prestigeCharge1);
-    	 
-    	 
-    	 
-    	 // 오는날 
-    	 paramMap.put("depAirportNm2",depAirportNm2 );
-    	 paramMap.put("arrAirportNm2",arrAirportNm2  );
-    	 paramMap.put("depPlandTime2",depPlandTime2);
-    	 paramMap.put("arrPlandTime2",arrPlandTime2 );
-    	 paramMap.put("airlineNm2",airlineNm2 );
-    	 paramMap.put("economyCharge2", economyCharge2);
-    	 paramMap.put("prestigeCharge2", prestigeCharge2);
-   
-    	 
-    	 
-			
+					 paramMap.put("depAirportNm1",session.getAttribute("depAirportNm1") );
+			    	 paramMap.put("arrAirportNm1",session.getAttribute("arrAirportNm1") );
+			    	 paramMap.put("depPlandTime1",session.getAttribute("depPlandTime1") );
+			    	 paramMap.put("arrPlandTime1",session.getAttribute("arrPlandTime1") );
+			    	 paramMap.put("airlineNm1",session.getAttribute("airlineNm1") );
+			    	 paramMap.put("economyCharge1", session.getAttribute("economyCharge1") );
+			    	 paramMap.put("prestigeCharge1", session.getAttribute("prestigeCharge1") );
+			    	 session.setAttribute("paramMap1", paramMap);
+			    	 
+		
+					if(flag.equals("1")) {
+
+				    	// 오는날
+						
+				    	 mav.addObject(paramMap);
+						
+					}else{
+
+				    	// 오는날
+						session.setAttribute("depAirportNm2", depAirportNm1);
+					    session.setAttribute("arrAirportNm2", arrAirportNm1);
+					    session.setAttribute("depPlandTime2", depPlandTime1);
+					    session.setAttribute("arrPlandTime2", arrPlandTime1);
+					    session.setAttribute("airlineNm2", airlineNm1);
+					    session.setAttribute("economyCharge2", economyCharge1);
+					    session.setAttribute("prestigeCharge2", prestigeCharge1);
+					    session.setAttribute("vihicleId2", vihicleId1);
+					    
+					    
+					    
+				    	 paramMap.put("depAirportNm2",depAirportNm1 );
+				    	 paramMap.put("arrAirportNm2",arrAirportNm1);
+				    	 paramMap.put("depPlandTime2",depPlandTime1 );
+				    	 paramMap.put("arrPlandTime2",arrPlandTime1 );
+				    	 paramMap.put("airlineNm2",airlineNm1);
+				    	 paramMap.put("economyCharge2", economyCharge1 );
+				    	 paramMap.put("prestigeCharge2", prestigeCharge1 );
+				    	 
+				    	 
+				    	 mav.addObject(paramMap);
+				    	
+						
+					}
+		
+						mav.setViewName("booking/passengerForm");
+						
 					
-			//3. 승객 입력폼으로 이동하기 
-    	    mav.addObject(paramMap);
-			mav.setViewName("booking/passengerForm");
-			
-		
-		return mav; 
-		
-		
+					return mav; 
+					
+					
 		
 	}
 	
@@ -322,29 +291,14 @@ public class BookingController {
 					//ModelAndView mav = new ModelAndView();
 					HttpSession session = request.getSession();
 					
-					
+					String flag=(String) session.getAttribute("flag");
 					
 					
 					// ■■■■■■■  세션에 저장한 가는날 노선정보 + 개인정보 insert
-					 String depAirportNm1 = (String) session.getAttribute("depAirportNm1"); // 출발 공항명 가져오기
-			    	 String arrAirportNm1 = (String) session.getAttribute("arrAirportNm1");// 도착 공항명 가져오기
-			    	 String depPlandTime1 = (String) session.getAttribute("depPlandTime1");//가는날 
-			    	 String arrPlandTime1 =  (String) session.getAttribute("arrPlandTime1");// 오는날 
-			    	 String airlineNm1= (String) session.getAttribute("airlineNm1"); // 이용항공사 이름 
-			    	 String  economyCharge1= (String) session.getAttribute("economyCharge1"); // 이코노미석 
-			    	 String prestigeCharge1 = (String) session.getAttribute("prestigeCharge1"); // 프레스티지석 		    
-			    	 String  airPlaneId1 = (String) session.getAttribute("airPlaneId1");
+					
 			    	 
-			    	 HashMap<String,Object>paramMap1 = new HashMap<String,Object>();
-			    	 // 가는날 노선 
-			    	 paramMap1.put("depAirportNm1",depAirportNm1 );
-			    	 paramMap1.put("arrAirportNm1",arrAirportNm1  );
-			    	 paramMap1.put("depPlandTime1",depPlandTime1);
-			    	 paramMap1.put("arrPlandTime1",arrPlandTime1 );
-			    	 paramMap1.put("airlineNm1",airlineNm1 );
-			    	 paramMap1.put("economyCharge1", economyCharge1);
-			    	 paramMap1.put("prestigeCharge1", prestigeCharge1);
-			    	 paramMap1.put("airPlaneId1", airPlaneId1);
+			    	 HashMap<String,Object>paramMap1 = (HashMap<String, Object>) session.getAttribute("paramMap1");
+	 
 			    	 // 개인정보 
 			    	 paramMap1.put("name",name );
 			    	 paramMap1.put("phone",phone );
@@ -352,34 +306,23 @@ public class BookingController {
 			    	 paramMap1.put("gender", gender);
 			    	 paramMap1.put("sit1",sit1 );
 			    	 paramMap1.put("journey","dep" );
+			    	 paramMap1.put("vihicleId1",session.getAttribute("vihicleId1") );
 			    	
-			    	 System.out.println("paramMap1 : " + paramMap1);
+			    	 System.out.println("예약테이블에 들어갈 가는날 노선 paramMap1 : " + paramMap1);
 			    	 
-			    	 
-			    	
-			    	
-			    	
 
-					
 					// ■■■■■■■ 세션에 저장한 오는날 노선정보 + 개인정보 insert
-			    	 String depAirportNm2 = (String) session.getAttribute("depAirportNm2"); // 출발 공항명 가져오기
-			    	 String arrAirportNm2 = (String) session.getAttribute("arrAirportNm2");// 도착 공항명 가져오기
-			    	 String depPlandTime2 = (String) session.getAttribute("depPlandTime2");//가는날 
-			    	 String arrPlandTime2 =  (String) session.getAttribute("arrPlandTime2");// 오는날 
-			    	 String airlineNm2= (String) session.getAttribute("airlineNm2"); // 이용항공사 이름 
-			    	 String  economyCharge2= (String) session.getAttribute("economyCharge2"); // 이코노미석 
-			    	 String prestigeCharge2 = (String) session.getAttribute("prestigeCharge2"); // 프레스티지석 			
-			    	 String  airPlaneId2 = (String) session.getAttribute("airPlaneId2");
+			    	
 			    	 //오는날 노선 
 			    	 HashMap<String,Object>paramMap2 = new HashMap<String,Object>();
-			    	 paramMap2.put("depAirportNm2",depAirportNm2 );
-			    	 paramMap2.put("arrAirportNm2",arrAirportNm2  );
-			    	 paramMap2.put("depPlandTime2",depPlandTime2);
-			    	 paramMap2.put("arrPlandTime2",arrPlandTime2 );
-			    	 paramMap2.put("airlineNm2",airlineNm2 );
-			    	 paramMap2.put("economyCharge2", economyCharge2);
-			    	 paramMap2.put("prestigeCharge2", prestigeCharge2);
-			    	 paramMap2.put("airPlaneId2", airPlaneId2);
+			    	 paramMap2.put("depAirportNm2",session.getAttribute("depAirportNm2") );
+			    	 paramMap2.put("arrAirportNm2",session.getAttribute("arrAirportNm2")  );
+			    	 paramMap2.put("depPlandTime2",session.getAttribute("depPlandTime2"));
+			    	 paramMap2.put("arrPlandTime2",session.getAttribute("arrPlandTime2"));
+			    	 paramMap2.put("airlineNm2", session.getAttribute("airlineNm2") );
+			    	 paramMap2.put("economyCharge2", session.getAttribute("economyCharge2"));
+			    	 paramMap2.put("prestigeCharge2", session.getAttribute("prestigeCharge2"));
+			    	 paramMap2.put("vihicleId2",session.getAttribute("vihicleId2") );
 			    	 // 개인정보 
 			    	 paramMap2.put("name",name );
 			    	 paramMap2.put("phone",phone );
@@ -387,18 +330,32 @@ public class BookingController {
 			    	 paramMap2.put("gender", gender);
 			    	 paramMap2.put("sit2",sit2 );
 			    	 paramMap2.put("journey","return" );
+			    	 System.out.println("예약테이블에 들어갈 오는날 노선 paramMap2 : " + paramMap2);
 			    	 
-			    	 System.out.println("paramMap2 : " + paramMap2);
 			    	 
 			    	int result =0;
-			    	result = bs.insertReserv(paramMap1,paramMap2);
-			    	 
+			    	if(flag.equals("1")) {	
+			    				result = bs.insertReserv1(paramMap1);
+			    	}else {
+			    		result = bs.insertReserv(paramMap1,paramMap2);
+			    		
+			    	}
 			    	 System.out.println("추가됨 : " + result);
 					// 결제 완료창으로 이동 
 					return "redirect:/finishReserv";
 		
 	}
 	
+	
+	
+	@PostMapping("finishReserv")
+	
+	   public String finishReserv() {
+
+		return "booking/finishReserv.jsp";
+	
+		
+	}
 	
 	@PostMapping("checkReserv")
 	// 예약확인 	
@@ -424,7 +381,7 @@ public class BookingController {
 		
 	}
 	
-	@PostMapping("updateReserv")
+	@PostMapping("updateReservForm")
 	// 예약수정 : 승객 개인정보만 
 	   public ModelAndView updateReserv( HttpServletRequest request,
 			   												@RequestParam("reservNum_return") String reservNum_return,
@@ -439,14 +396,19 @@ public class BookingController {
 		
 		
 		// 예약자 정보 불러오기 (예약번호를 통해)
-		HashMap<String,Object>list = bs.getPassenInfo(reservNum_return,reservNum_dep);
+		HashMap<String,Object>list = bs.updatePassenInfo(reservNum_return,reservNum_dep);
 		
 		mav.addObject("list1", list.get("list1"));
-		// 
+		mav.setViewName(reservNum_dep);
 		
 	return mav;
 	
 		
 	}
+	
+
+	
+	
+	
 	
 }

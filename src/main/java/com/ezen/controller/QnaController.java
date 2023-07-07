@@ -2,7 +2,6 @@ package com.ezen.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ezen.dto.AdminVO;
 import com.ezen.dto.MemberVO;
 import com.ezen.dto.QnaVO;
 import com.ezen.service.QnaService;
@@ -186,6 +186,12 @@ public class QnaController {
 		HttpSession session = request.getSession();
 		MemberVO mvo =(MemberVO) session.getAttribute("loginUser");
 		if(mvo == null) {
+			/*if(avo != null) {	//관리자로 로그인 되었을때
+				HashMap<String, Object> list =  qs.getQnaWithoutCount( qna_num );
+				mav.addObject("qnaVO",list.get("qnaVO"));
+				mav.setViewName("admin/qna/adminQnaDetail");
+				return mav;
+			}*/
 			mav.setViewName("member/loginForm");
 		}else {
 		HashMap<String, Object> list =  qs.getQnaWithoutCount( qna_num );

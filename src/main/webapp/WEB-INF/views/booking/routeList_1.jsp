@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
+<%@ include file="../include/header.jsp"%>
 <style>
 body {
 	font-family: Arial, sans-serif;
@@ -86,6 +84,7 @@ input[type="submit"] {
 	transition-duration: 0.4s;
 	cursor: pointer;
 	border-color: #00256c;
+	width: 20%;
 }
 
 input[type="submit"]:hover {
@@ -119,76 +118,69 @@ article h2 {
         }
 /* Add the hover property to the .routeList tr class */
 </style>
+
+
 <script>
-let clickedRowData = null; 
-document.addEventListener("DOMContentLoaded", function() {
-    function rowClicked() {
-       
-    	var table = document.getElementById('routeList');
-        if (!table) {
-            console.error('Cannot find a table with id "routeList". Please check your HTML code.');
-            return;
-        }
-        var rowList = table.rows;
-        
-        for (i = 1; i < rowList.length; i++) {
-        	
-            var row = rowList[i];
+
+let clickedRowData = null;
+
+$(document).ready(function() {
+   
+
+    $('#routeList tr').each(function() {
+        $(this).click(function() {
+            let depAirportNm = $.trim($(this).find("td:eq(0)").text());
+            let arrAirportNm = $.trim($(this).find("td:eq(1)").text());
+            let depPlandTime = $.trim($(this).find("td:eq(2)").text()); 
+            let arrPlandTime = $.trim($(this).find("td:eq(3)").text()); 
+            let airlineNm = $.trim($(this).find("td:eq(4)").text());
+            let vihicleId = $.trim($(this).find("td:eq(5)").text());
             
-            row.onclick = function() {
-            	     	
-            	
-            	
-            	var depAirportNm = this.cells[0].innerHTML.trim();
-            	var arrAirportNm = this.cells[1].innerHTML.trim();
-            	 
-		          var depPlandTime = this.cells[2].innerText.trim(); // 출발일시 
-		          var arrPlandTime = this.cells[3].innerText.trim(); // 도착일시 
-		          var airlineNm = this.cells[4].innerText.trim(); // 항공사 이름  
-		          var economyCharge = this.cells[5].innerText.trim(); // 이코노미 
-		          var prestigeCharge = this.cells[6].innerText.trim(); // 프레스티지석 
-		          
-			        console.log('depAirportNm: ' + depAirportNm);
-		            console.log('arrAirportNm: ' + arrAirportNm);
-		            console.log('depPlandTime: ' + depPlandTime);
-		            console.log('arrPlandTime: ' + arrPlandTime);
-		            console.log('economyCharge: ' + economyCharge);
-		            console.log('prestigeCharge: ' + prestigeCharge);
-		            console.log('airlineNm: ' + airlineNm);
-		            
-		            
-		            
-               // var cells = this.cells;
-                var str=  depAirportNm+ 
-                          "/" + arrAirportNm+
-                          "/" + depPlandTime +
-                          "/" + arrPlandTime +
-                          "/" + economyCharge +
-                          "/" + prestigeCharge +
-                          "/" + airlineNm;
-               
-                clickedRowData = {
-                		depAirportNm: depAirportNm,
-                		arrAirportNm: arrAirportNm,
-                		depPlandTime: depPlandTime,
-                		arrPlandTime: arrPlandTime,
-                		economyCharge: economyCharge,
-                		prestigeCharge: prestigeCharge,
-                		airlineNm: airlineNm
-                	};
-                
-                console.log(str);
-                document.querySelector('p').innerText = str;
+            let economyCharge = $(this).find('#economyCharge').val();
+            let prestigeCharge = $(this).find('#prestigeCharge').val();
+            
+            let economyCharge1 = $(this).find('td:nth-child(6)').text().trim();
+            let prestigeCharge1 = $(this).find('td:nth-child(7)').text().trim();
+            if (economyCharge1 === '매진' && prestigeCharge1 === '매진') {
+                alert('다른 좌석을 선택하세요');
+                return;
+            }
+
+
+            console.log('depAirportNm: ' + depAirportNm);
+            console.log('arrAirportNm: ' + arrAirportNm);
+            console.log('depPlandTime: ' + depPlandTime);
+            console.log('arrPlandTime: ' + arrPlandTime);
+            console.log('economyCharge: ' + economyCharge);
+            console.log('prestigeCharge: ' + prestigeCharge);
+            console.log('airlineNm: ' + airlineNm);
+            console.log('vihicleId: ' + vihicleId);
+            
+            clickedRowData = {
+                depAirportNm: depAirportNm,
+                arrAirportNm: arrAirportNm,
+                depPlandTime: depPlandTime,
+                arrPlandTime: arrPlandTime,
+                economyCharge: economyCharge,
+                prestigeCharge: prestigeCharge,
+                airlineNm: airlineNm,
+                vihicleId : vihicleId
             };
-        }            
-    }
-    rowClicked();
+
+            let str = depAirportNm + "/" + arrAirportNm + "/" + depPlandTime + "/" + arrPlandTime + "/" + economyCharge + "/" + prestigeCharge + "/" + airlineNm+"/"+ vihicleId ;
+            
+            console.log(str);
+            $('p').text(str);
+        });
+    });
 });
+
+
 
 function goto_routeList2() {
     // Check if any row has been clicked
     if (clickedRowData === null) {
-        alert("Please select a row first!");
+        alert("좌석을 선택하세요");
         return;
     }
 
@@ -247,72 +239,157 @@ function goto_routeList2() {
 
 
 <article>
-	<h2>출발하는날 노선 결과물 routeList ${flag }</h2>
-	<form id="frm" method="post" action="flightInfo2">
-		<input type="hidden" name="flag" value="${flag}">
-		<div id="routeInfo">
-			<div class="route-info-wrapper">
-				<span>
-					<h4 style="color: #ffffff;">${depAirportNm}&nbsp;<input type= "hidden" name="depAirportNm" value="${depAirportNm}"></h4>
-				</span>
-				<span>
-					<h3 style="color: #ffffff;">→</h3>
-				</span>
-				<span>
-					<h4 style="color: #ffffff;">${arrAirportNm}&nbsp;<input type= "hidden" name="arrAirportNm" value="${arrAirportNm}"></h4>
-				</span>
-			</div>
+	<!--  <h2>출발하는날 노선 결과물 routeList</h2>-->
+<form id="frm" method="post" action="flightInfo2">
+	<div id="routeInfo">
+		<div class="route-info-wrapper">
+			<span>
+				<h4 style="color: #ffffff;">${depAirportNm}&nbsp;<input type= "hidden" name="depAirportNm" value="${depAirportNm}"></h4>
+			</span>
+			<span>
+				<h3 style="color: #ffffff;">→</h3>
+			</span>
+			<span>
+				<h4 style="color: #ffffff;">${arrAirportNm}&nbsp;<input type= "hidden" name="arrAirportNm" value="${arrAirportNm}"></h4>
+			</span>
 		</div>
-		<div class="row">
-		
-		
-			<table class="routeList" id="routeList">
-				<tr>
-					
-					<th>출발지 </th> 
-					<th>목적지 </th>
-					<th>출발일시 </th>						
-					<th>도착일시</th>
-					<th>항공사</th>  
-					<th>이코노미석 가격</th>
-					<th>프레티지석 가격</th>
-				</tr>
-				
-				
-				
-				<c:forEach items="${dep_list}" var="item" varStatus="state"> 
-					    <tr>
-					        <td>
-					            ${item.depAirportNm}
-					        </td>
-					        <td>					            
-					            ${item.arrAirportNm}
-					        </td>
-					        <td>				           
-					            ${item.depPlandTime}
-					        </td>
-					        <td>					           
-					            ${item.arrPlandTime}
-					        </td>
-					        <td>				            
-					            ${item.airlineNm}
-					        </td>
-					        <td>				           
-					            ${item.economyCharge}
-					        </td>
-					        <td>					           
-					            ${item.prestigeCharge}
-					        </td>
-					    </tr>
-						</c:forEach>
+	</div>
+	<div class="row">
+	
+	
+		<table class="routeList" id="routeList">
+			<tr>
+				<th>출발지 </th> 
+				<th>목적지 </th>
+				<th>출발일시 </th>						
+				<th>도착일시</th>
+				<th>항공사</th>
+				<th>좌석현황</th>  
+				<th>항공편ID</th>
+				<th>이코노미석 가격</th>
+				<th>프레티지석 가격</th>
+			</tr>
 
-			</table>
-			
- 			<p></p>
-			<input type="submit" value="선택하기" class="submit" onclick="event.preventDefault(); goto_routeList2()"/>
-		</div>
-	</form>
+			<c:forEach items="${dep_list}" var="item" varStatus="state"> 
+				    <tr>
+				        <td>
+				            ${item.depAirportNm}
+				        </td>
+				        <td>					            
+				            ${item.arrAirportNm}
+				        </td>
+				        <td>
+
+						<fmt:formatDate value="${item.depPlandTimeDate}" pattern="yyyy-MM-dd HH:mm"/> 
+       
+				        </td>
+						<td>
+
+						<fmt:formatDate value="${item.arrPlandTimeDate}" pattern="yyyy-MM-dd HH:mm"/> 
+						</td>
+						<td style="text-align: center">
+				        	<c:forEach items="${airlineList}" var="airlineList" varStatus="state">
+					        	<c:if test="${item.airlineNm==airlineList.airline_name}">
+					        		<img src="images/booking/${airlineList.image}" style="width:50px;"/><br>
+					        		${item.airlineNm}
+					        	</c:if>
+				        	</c:forEach>	            
+				        </td>
+				        <!-- 남은좌석 수 start -->
+				        <td>
+				        	<!-- item -->
+				        	<c:choose>
+				        		<c:when test="${empty item.economyCharge || item.economyCharge == 0 }">
+				        			<div>
+				        				이코노미 잔여 좌석 수 : 0
+				        			</div>
+				        		</c:when>
+				        		<c:otherwise>
+				        			<div>
+						        		<c:forEach items="${economyList}" var="economyList" varStatus="state">
+								        	<c:choose>
+								        		<c:when test="${economyList.vihicleid == item.vihicleId && state.first}">
+								        			이코노미 잔여 좌석 수 : ${economyList.remain_economy}
+								        		</c:when>
+								        		<c:otherwise>
+								        			<c:if test="${state.first }">
+								        				이코노미 잔여 좌석 수 : ${economyList.economy_sit}
+								        			</c:if>
+								        		</c:otherwise>
+								        	</c:choose>
+						        		</c:forEach>	
+				        			</div>
+				        		</c:otherwise>
+				        	</c:choose>
+				        	
+				        	<c:choose>
+				        		<c:when test="${empty item.prestigeCharge || item.prestigeCharge ==0}">
+				        			<div>
+				        				프레스티지 잔여 좌석 수 : 0
+				        			</div>
+				        		</c:when>
+				        		<c:otherwise>
+						        	<div>
+						        		<c:forEach items="${prestigeList}" var="prestigeList" varStatus="state">
+								        	<c:choose>
+								        		<c:when test="${prestigeList.vihicleid == item.vihicleId && state.first}">
+								        			프레스티지 잔여 좌석 수 : ${prestigeList.remain_prestige}
+								        		</c:when>
+								        		<c:otherwise>
+								        			<c:if test="${state.first }">
+								        				프레스티지 잔여 좌석 수 : ${prestigeList.prestige_sit}
+								        			</c:if>
+								        		</c:otherwise>
+								        	</c:choose>
+						        		</c:forEach>	
+						        	</div>
+				        		</c:otherwise>
+				        	</c:choose>
+				        </td>
+				        <td> ${item.vihicleId}</td>
+				            
+				        <c:choose>
+							  <c:when test="${item.economyCharge ne null and item.economyCharge ne 0 }">
+							    <td>
+							      <fmt:formatNumber value="${item.economyCharge}" pattern="₩ #,###" type="currency" currencySymbol="₩" />
+							      <input type="hidden" id="economyCharge"  value="${item.economyCharge}" >
+							    </td>
+							  </c:when>
+							  
+							  <c:otherwise>
+							    <td>
+							      <span style="color: red;">매진</span>
+							      <input type="hidden" id="economyCharge"  value="${item.economyCharge}" >
+							    </td>
+							  </c:otherwise>
+						</c:choose>
+				        
+				        
+				        <c:choose>
+							  <c:when test="${item.prestigeCharge ne 0 and item.prestigeCharge ne null }">
+							    <td>
+							      <fmt:formatNumber value="${item.prestigeCharge}" pattern="₩ #,###" type="currency" currencySymbol="₩" />
+							   	  <input type="hidden" id="prestigeCharge"  value="${item.prestigeCharge}" >
+							    </td>
+							  </c:when>
+							  
+							  <c:otherwise>
+							    <td>
+							      <span style="color: red;">매진</span>
+							      <input type="hidden" id="prestigeCharge"  value="${item.prestigeCharge}" >
+							    </td>
+							  </c:otherwise>
+						</c:choose>
+				</tr>
+		</c:forEach>
+
+
+		</table>
+		
+			<p></p>
+		<input type="submit" value="선택하기" class="submit" onclick="event.preventDefault(); goto_routeList2()"/>
+	</div>
+</form>
 </article>
 
-</html>
-
+<%@ include file="../include/footer.jsp"%>

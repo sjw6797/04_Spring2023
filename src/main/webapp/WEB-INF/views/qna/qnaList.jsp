@@ -64,7 +64,7 @@
 </div>
 <div class="clear"></div>
 <jsp:include page="../include/paging.jsp">
-	<jsp:param name="command" value="qnaList?command=qnaList" />
+	<jsp:param name="command" value="qnaList" />
 </jsp:include>
 	
 <%@ include file="../include/footer.jsp"%>

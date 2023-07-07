@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ include file="../header.jsp"%>
+<%@ include file="../include/header.jsp"%>
 
 <meta charset="UTF-8">
 
@@ -145,19 +145,18 @@ margin-top: 40PX;
 		</div>	
 		
 		<div id="formBox">	
-			<form method="post" action="air.do"name="routeResultFrm">
+			<form method="post" action="checkReserv">
 			<input type="hidden" name="command" value="reservCheck">
 				<!--<input type="hidden" name="command" value="Reserv">  -->
 				
-				<fieldset>
-					<legend></legend>
-						<input name="name" type="text" id="name" placeholder="이름을 입력하세요"><br>
-						
-				        <input name="passport" type="text" placeholder="여권번호를 입력하세요"><br>
-				      
-				     
-				        
-				</fieldset>
+				
+
+				
+				이름  : <input type = "text" name="name">
+				전화번호  : <input type = "text" name="phone">
+
+
+ 					
 		
 				<input type="submit" value="예약확인하기" class="submit"/><br>
 				<h5>${message}</h5>
@@ -169,4 +168,4 @@ margin-top: 40PX;
 		</div>
 </div>
 </article>
-<%@ include file="../footer.jsp"%>
+<%@ include file="../include/footer.jsp"%>

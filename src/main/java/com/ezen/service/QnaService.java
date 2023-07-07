@@ -26,8 +26,6 @@ public class QnaService {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		HttpSession session = request.getSession();
 		
-		// first==1로 오면 key,page 세션초기화 
-		
 		//Paging 객체작업
 		int page = 1;
 		if( request.getParameter("page") != null ) {
@@ -50,6 +48,12 @@ public class QnaService {
 			session.removeAttribute("key");
 		}
 		
+		//만약 1페이지를 제외한 다른 페이지에서 key를 가지고 검색한 경우 page를 1로 설정
+		if( page != 1 && !key.equals("")) {
+			System.out.println("53줄");
+			page=1;
+		}
+
 		Paging paging = new Paging();
 		paging.setPage(page);// 받은 page값이 있다면 현재페이지를 설정
 		int count = qdao.getAllCount(key);
@@ -107,6 +111,12 @@ public class QnaService {
 	public void updateQna(@Valid QnaVO qnavo) {
 
 		qdao.updateQna(qnavo);
+		
+	}
+
+	public void addReply(int qna_num, String reply) {
+
+		qdao.addReply(qna_num,reply);
 		
 	}
 }

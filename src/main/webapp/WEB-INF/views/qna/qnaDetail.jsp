@@ -33,7 +33,7 @@
 </div>
 <div class="clear"></div>
 
-<div id="content">
+<div id="content" style="width:72%;">
 	<h2>Q&amp;A</h2>
 	<div class="detail_title">
 		<h2 class="h2">${qnaVO.title}</h2>

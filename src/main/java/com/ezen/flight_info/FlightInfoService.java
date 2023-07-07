@@ -46,10 +46,10 @@ public class FlightInfoService {
     
     public static ArrayList<String> getAirPortId() {
     	ArrayList<String> list = new ArrayList<String>();
-    	list.add(0, "무안(NAARKJB)");list.add(1, "광주(NAARKJJ)");list.add(2, "군산(NAARKJK)");list.add(3, "여수(NAARKJY)");
-    	list.add(4, "원주(NAARKNW)");list.add(5, "양양(NAARKNY)");list.add(6, "제주(NAARKPC)");list.add(7, "김해(NAARKPK)");
-    	list.add(8, "사천(NAARKPS)");list.add(9, "울산(NAARKPU)");list.add(10, "인천(NAARKSI)");list.add(11, "김포(NAARKSS)");
-    	list.add(12, "포항(NAARKTH)");list.add(13, "대구(NAARKTN)");list.add(14, "청주(NAARKTU)");
+    	list.add(0, "무안");list.add(1, "광주");list.add(2, "군산");list.add(3, "여수");
+    	list.add(4, "원주");list.add(5, "양양");list.add(6, "제주");list.add(7, "김해");
+    	list.add(8, "사천");list.add(9, "울산");list.add(10, "인천");list.add(11, "김포");
+    	list.add(12, "포항");list.add(13, "대구");list.add(14, "청주");
     	
     	return list;
     }

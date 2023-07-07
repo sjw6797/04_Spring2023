@@ -32,16 +32,14 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.3.1'
 	
-<<<<<<< HEAD
+
 	
 	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
 	implementation 'com.google.code.gson:gson:2.9.0'
 
-=======
 	implementation group:'commons-fileupload', name: 'commons-fileupload',version:'1.4'
 	implementation group: 'servlets.com', name: 'cos', version: '05Nov2002'
 	implementation 'com.google.code.gson:gson:2.9.0'
->>>>>>> branch 'master' of https://github.com/sjw6797/2023FinalProject04
 	implementation 'javax.servlet:jstl'
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 }

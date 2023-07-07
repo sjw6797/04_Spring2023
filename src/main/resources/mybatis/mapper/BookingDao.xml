@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ezen.dao.IBookingDao">
+
+
+	<insert id="insertReserv_dep" parameterType="com.ezen.dto.ReservVO">		
+			insert into reservation(reserv_num,departures, arrivals ,dep_time,return_time,airplane_name,r_name,r_phone,r_email,r_gender,r_class,indate,journey, vihicleId) 
+			values( reserv_seq.nextval, #{depAirportNm1},#{arrAirportNm1},#{depPlandTime1},#{arrPlandTime1},
+							#{airlineNm1},#{name},#{phone},#{email},#{gender},#{sit1},SYSTIMESTAMP,#{journey},#{vihicleId1})
+	</insert>
+	
+	<insert id="insertReserv_return" parameterType="com.ezen.dto.ReservVO">		
+			insert into reservation(reserv_num,departures, arrivals, dep_time,return_time,airplane_name,r_name,r_phone,r_email,r_gender,r_class,indate,journey,vihicleId) 
+			values( reserv_seq.nextval, #{depAirportNm2},#{arrAirportNm2},#{depPlandTime2}, #{arrPlandTime2},
+							 #{airlineNm2},#{name},#{phone},#{email},#{gender},#{sit2},SYSTIMESTAMP,#{journey},#{vihicleId2})
+	</insert>
+ 	
+ 	<select id="getReserv1"  resultType="com.ezen.dto.ReservVO" > <!--  가는날 일정  -->
+		select * from reservation where r_name=#{name} and r_phone=#{phone} and journey ='dep'
+	</select>
+	
+	<select id="getReserv2"  resultType="com.ezen.dto.ReservVO"  ><!--  오는날 일정  -->
+		select * from reservation where r_name=#{name} and r_phone=#{phone} and journey ='return'
+	</select>
+	
+	
+	<select id=" getPassenInfo"  resultType="com.ezen.dto.ReservVO"  >  <!--  승객 개인정보 수정할때 SELECT로 개인정보 불러오기    -->
+		select #{r_name}, #{r_email}, #{r_phone} , #{r_gender}, #{r_class} from reservation where reserv_num=#{reservNum_return}
+	</select>
+	
+	
+	<update id="updatePassenInfo1" parameterType="com.ezen.dto.ReservVO" > <!--  가는날 승객 개인정보 수정 -->
+		update reservation set r_name=#{r_name}, r_email=#{r_email}, r_phone=#{r_phone} , r_gender=#{r_gender}, 		
+			 								  r_class=#{r_class} where reserv_num=#{reservNum_dep}
+	</update>
+	
+	<update id="updatePassenInfo2" parameterType="com.ezen.dto.ReservVO" > <!--  오는날 승객 개인정보 수정 -->
+		update reservation set r_name=#{r_name}, r_email=#{r_email}, r_phone=#{r_phone} , r_gender=#{r_gender}, 			
+										      r_class=#{r_class} where reserv_num=#{reservNum_return}
+	</update>
+	
+	<!-- 신정우 작성 -->
+	<select id="getAirLine" resultType="com.ezen.dto.ReservVO">
+		select * from ${param1}
+	</select>
+	<!-- 신정우 작성 -->
+</mapper>
+
+
+
