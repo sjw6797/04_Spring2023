@@ -8,4 +8,21 @@ JSP+Servlet MVC패턴(모델2)를 활용한 1차 프로젝트를 기반으로 �
 ![image](https://github.com/sjw6797/04_Spring2023/assets/133834227/014c98ba-4776-4b50-b49e-15fbb7fde8fa)![image](https://github.com/sjw6797/04_Spring2023/assets/133834227/a8066345-08a7-4449-adba-ee004193c6cc)
 
 
+@구현환경(Enviroment)
+  -editor
+  -design
 
+@tech skils
+  -backend
+  -frontend
+  -ETC
+
+@DataBase E-R Diagram
+
+@시스템구성도
+@에러페이지 구성
+@트러블슈팅
+  - 코드 최적화
+  - DB시간에 맞춰서 시간데이터 썻던거?
+@ 개선 및 구현이 필요한 문제
+@ 팀협업을 진행하면서 느낀점
