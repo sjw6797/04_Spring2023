@@ -57,7 +57,7 @@
 			<input type="text" id="birth" name="birth" class="style" placeholder="생년월일" readonly="readonly" value="${loginUser.birth}">
 		</div>
 		<c:choose>
-			<c:when test="${empty loginUser.provider}">
+			<c:when test="${not empty loginUser.provider}">
 				<div class="textForm">
 					<input name="email" type="text" class="style" placeholder="이메일" id="email" value="${loginUser.email}" readonly>
 				</div>

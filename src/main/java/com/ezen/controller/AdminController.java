@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ezen.dto.AdminVO;
 import com.ezen.dto.BannerVO;
 import com.ezen.dto.BoardVO;
+import com.ezen.dto.MemberVO;
 import com.ezen.dto.ProductVO;
 import com.ezen.flight_info.FlightInfoService;
 import com.ezen.service.AdminService;
@@ -35,12 +36,14 @@ public class AdminController {
 
 	@Autowired
 	AdminService as;
-	
+
 	@Autowired
 	QnaService qs;
 
 	@RequestMapping("admin")
-	public String admin() {
+	public String admin(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		session.removeAttribute("loginUser");		
 		return "admin/loginForm";
 	}
 
@@ -70,11 +73,11 @@ public class AdminController {
 		HttpSession session = request.getSession();
 		ModelAndView mav = new ModelAndView();
 		/* 검색key가 ""공백으로 온다면 세션에 저장되어있는 page,key초기화 */
-		if(request.getParameter("key") == "") {
+		if (request.getParameter("key") == "") {
 			session.removeAttribute("key");
 			session.removeAttribute("page");
 		}
-		
+
 		mav.setViewName("redirect:/admin");
 		String id = (String) session.getAttribute("adminLogin");
 		if (id == null) {
@@ -93,13 +96,13 @@ public class AdminController {
 		HttpSession session = request.getSession();
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("redirect:/admin");
-		
+
 		/* 검색key가 ""공백으로 온다면 세션에 저장되어있는 page,key초기화 */
-		if(request.getParameter("key") == "") {
+		if (request.getParameter("key") == "") {
 			session.removeAttribute("key");
 			session.removeAttribute("page");
 		}
-		
+
 		String id = (String) session.getAttribute("adminLogin");
 		if (id == null) {
 		} else {
@@ -477,13 +480,13 @@ public class AdminController {
 		String id = (String) session.getAttribute("adminLogin");
 		if (id == null) {
 		} else {
-		BannerVO bvo = 	 as.getBanner(banner_num);
-		mav.addObject("dto", bvo);
-		mav.setViewName("admin/banner/adminBannerDetail");
+			BannerVO bvo = as.getBanner(banner_num);
+			mav.addObject("dto", bvo);
+			mav.setViewName("admin/banner/adminBannerDetail");
 		}
 		return mav;
 	}
-	
+
 //신정우 작성//
 	@RequestMapping("/adminQnaList")
 	public ModelAndView adminQnaList(HttpServletRequest request) {
@@ -491,59 +494,94 @@ public class AdminController {
 		ModelAndView mav = new ModelAndView();
 		HttpSession session = request.getSession();
 		/* 상단배너로부터 qnaList이동 시 */
-		// first==1로 오면 key,page 세션초기화 
-		if(request.getParameter("first") !=null) {
+		// first==1로 오면 key,page 세션초기화
+		if (request.getParameter("first") != null) {
 			session.removeAttribute("key");
 			session.removeAttribute("page");
 		}
 		/* 검색key가 ""공백으로 온다면 세션에 저장되어있는 page,key초기화 */
-		if(request.getParameter("key") == "") {
+		if (request.getParameter("key") == "") {
 			session.removeAttribute("key");
 			session.removeAttribute("page");
 		}
-		
+
 		/*
 		 * AdminVO avo =(AdminVO) session.getAttribute("adminLogin"); if(avo == null) {
 		 * mav.setViewName("admin/loginForm"); }else {
 		 */
-		//	paging, key, QnaList를 받아와야하므로 HashMap을 사용한다
+		// paging, key, QnaList를 받아와야하므로 HashMap을 사용한다
 		HashMap<String, Object> list = qs.getQna(request);
-		mav.addObject("qnaList",list.get("qnaList"));
-		mav.addObject("paging",list.get("paging"));
+		mav.addObject("qnaList", list.get("qnaList"));
+		mav.addObject("paging", list.get("paging"));
 		mav.addObject("key", list.get("key"));
 		mav.setViewName("admin/qna/adminQnaList");
 		/* } */
 		System.out.println("2");
 		return mav;
 	}
-	
+
 	@RequestMapping("/adminQnaDetail")
-	public String qnaDetail( @RequestParam("qna_num") int qna_num,HttpServletRequest request,Model model ) {
-		
-		HashMap<String, Object> list =  qs.getQnaView( qna_num );
-		model.addAttribute("qnaVO",list.get("qnaVO"));
+	public String qnaDetail(@RequestParam("qna_num") int qna_num, HttpServletRequest request, Model model) {
+
+		HashMap<String, Object> list = qs.getQnaView(qna_num);
+		model.addAttribute("qnaVO", list.get("qnaVO"));
 		return "admin/qna/adminQnaDetail";
 	}
-	
-	@RequestMapping(value="qnaReply",method=RequestMethod.POST)	// Qna문의사항에 대한 답변작성
-	public String qnaReply( @RequestParam("reply")String reply,@RequestParam("qna_num")int qna_num,Model model) {
+
+	@RequestMapping(value = "qnaReply", method = RequestMethod.POST) // Qna문의사항에 대한 답변작성
+	public String qnaReply(@RequestParam("reply") String reply, @RequestParam("qna_num") int qna_num, Model model) {
 		// 작성하면 해당 qna_num게시물에 reply-insert, readcount안올라가고, result='Y'로 변경
 		qs.addReply(qna_num, reply);
-		
+
 		/* model.addAttribute("qna_num",qna_num); */
-		return "redirect:/adminQnaDetailWithoutCount?qna_num="+ qna_num;
+		return "redirect:/adminQnaDetailWithoutCount?qna_num=" + qna_num;
 	}
-	
+
 	@RequestMapping("/adminQnaDetailWithoutCount")
-	public ModelAndView qnaDetailWithoutCount( @RequestParam("qna_num") int qna_num, HttpServletRequest request) {
+	public ModelAndView qnaDetailWithoutCount(@RequestParam("qna_num") int qna_num, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 
-		HashMap<String, Object> list =  qs.getQnaWithoutCount( qna_num );
-		mav.addObject("qnaVO",list.get("qnaVO"));
+		HashMap<String, Object> list = qs.getQnaWithoutCount(qna_num);
+		mav.addObject("qnaVO", list.get("qnaVO"));
 		mav.setViewName("admin/qna/adminQnaDetail");
-	
+
 		return mav;
 	}
-	///////////////////////////////////////////////////////////////////////////////	
+	///////////////////////////////////////////////////////////////////////////////
+
+	@RequestMapping("searchPassenAdmin")
+	public ModelAndView searchPassenAdmin(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		ModelAndView mav = new ModelAndView();
+		/* 검색key가 ""공백으로 온다면 세션에 저장되어있는 page,key초기화 */
+		if (request.getParameter("key") == "") {
+			session.removeAttribute("key");
+			session.removeAttribute("page");
+		}
+
+		mav.setViewName("redirect:/admin");
+		String id = (String) session.getAttribute("adminLogin");
+		if (id == null) {
+		} else {
+			HashMap<String, Object> result = as.getpassenList(request);
+			mav.addObject("passenlist", result.get("passenList"));
+			mav.addObject("paging", result.get("paging"));
+			mav.addObject("key", result.get("key"));
+			mav.setViewName("admin/reservation/pessengerList");
+		}
+		return mav;
+	}
+
+	// 수정부분
+	@RequestMapping("adminMemberUpdateForm")
+	public ModelAndView adminMemberUpdateForm(@RequestParam("member_num") int member_num) {
+
+		ModelAndView mav = new ModelAndView();
+		MemberVO mvo = as.getAdminMember(member_num);
+		mav.addObject("loginUser", mvo);
+		mav.setViewName("admin/member/memberUpdateForm");
+
+		return mav;
+	}
 
 }

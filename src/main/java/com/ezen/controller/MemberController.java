@@ -8,9 +8,11 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.directory.SchemaViolationException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -49,7 +51,12 @@ public class MemberController {
 	MemberService ms;
 
 	@RequestMapping("/")
-	public String start(Model model) {
+	public String start(Model model, @RequestParam(value = "con1", required = false) String con1) {
+
+		if (con1 != null) {
+			model.addAttribute("con1", con1);
+
+		}
 
 		ArrayList<String> list = new ArrayList<String>();
 		FlightInfoService fs = new FlightInfoService();
@@ -190,7 +197,7 @@ public class MemberController {
 	}
 
 	@RequestMapping("/kakaoLogin")
-	public String loginKakao(HttpServletRequest request) throws UnsupportedEncodingException, IOException {
+	public String loginKakao(HttpServletRequest request, Model model) throws UnsupportedEncodingException, IOException {
 
 		// 카카오 아이디, 비번 인증 + 아이디 이메일 제공 동의 후 전송되는 암호화 코드
 		String code = request.getParameter("code");
@@ -245,6 +252,7 @@ public class MemberController {
 		Profile pf = ac.getProfile();
 
 		MemberVO mvo = ms.getMember(kakaoProfile.getId());
+		String url3 = "redirect:/";
 		if (mvo == null) {
 			mvo = new MemberVO();
 			mvo.setId(kakaoProfile.getId());
@@ -252,12 +260,19 @@ public class MemberController {
 			mvo.setName(pf.getNickname());
 			mvo.setProvider("kakao");
 			ms.joinKakao(mvo);
+			HttpSession session = request.getSession();
+			session.setAttribute("loginUser", mvo);
+		}else if(mvo.getProvider().equals("kakao")&& mvo.getUseyn().equals("N")) {
+			model.addAttribute("message", "탈퇴한 계정입니다");
+			url3 = "member/loginForm";
+		} else if(mvo.getUseyn().equals("Y")) {
+			HttpSession session = request.getSession();
+			session.setAttribute("loginUser", mvo);
 		}
 
-		HttpSession session = request.getSession();
-		session.setAttribute("loginUser", mvo);
+		
 
-		return "redirect:/";
+		return url3;
 	}
 
 	@RequestMapping("memberUpdateForm")
@@ -272,9 +287,9 @@ public class MemberController {
 
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("member/updateForm");
-		if (rs.getFieldError("pwd") != null && membervo.getProvider().equals("")) {
+		if (rs.getFieldError("pwd") != null && !membervo.getProvider().equals("kakao")) {
 			mav.addObject("message", rs.getFieldError("pwd").getDefaultMessage());
-		} else if ((pwdcheck == null || !membervo.getPwd().equals(pwdcheck)) && membervo.getProvider().equals("")) {
+		} else if ((pwdcheck == null || !membervo.getPwd().equals(pwdcheck)) && membervo.getProvider().equals("kakao")) {
 			mav.addObject("message", "비밀번호 확인이 틀렸습니다");
 		} else if (rs.getFieldError("name") != null) {
 			mav.addObject("message", rs.getFieldError("name").getDefaultMessage());
@@ -293,10 +308,20 @@ public class MemberController {
 		} else if (rs.getFieldError("gender") != null) {
 			mav.addObject("message", rs.getFieldError("gender").getDefaultMessage());
 		} else {
+			// 새로 수정한 부분
+			if (membervo.getProvider().equals("kakao")) {
+				membervo.setPwd("");
+			}
+
 			ms.updateMember(membervo);
 			HttpSession session = request.getSession();
-			session.setAttribute("loginUser", membervo);
-			mav.setViewName("redirect:/");
+
+			if (session.getAttribute("adminLogin") != null) {
+				mav.setViewName("redirect:adminMemberList");
+			} else {
+				session.setAttribute("loginUser", membervo);
+				mav.setViewName("redirect:/");
+			}
 		}
 
 		return mav;
@@ -309,8 +334,27 @@ public class MemberController {
 	public ModelAndView productDetail(@RequestParam("product_num") int product_num) {
 		ModelAndView mav = new ModelAndView();
 		ProductVO pvo = as.getProduct(product_num);
+		pvo.getCategory();
 		mav.addObject("dto", pvo);
 		mav.setViewName("product/productDetail");
 		return mav;
 	}
+
+	@RequestMapping("memberDelete")
+	@ResponseBody
+	public int memberDelete(HttpServletRequest request, @RequestParam("pwd") String pwd) {
+		HttpSession session = request.getSession();
+		MemberVO mvo = (MemberVO) session.getAttribute("loginUser");
+		int data = 0;
+		if (!mvo.getPwd().equals(pwd)) { // 비밀번호 틀림
+			data = -1;
+		} else { // 회원정보 삭제
+			as.deleteMember(mvo.getMember_num());
+			session.removeAttribute("loginUser");
+			data = 1;
+		}
+
+		return data;
+	}
+
 }

@@ -11,6 +11,10 @@
 	<select id="getAllCount" resultType="_int">
 		select count(*) from ${param1} where ${param2} like '%'||#{param3}||'%'
 	</select>
+	
+	<select id="getAllCountReservation" resultType="_int">
+		select count(*) from ${param1} where ${param2} like '%'||#{param4}||'%' or ${param3} like '%'||#{param4}||'%'
+	</select>
 
 	<select id="listMember" resultType="com.ezen.dto.MemberVO">
 		select * from (
@@ -35,6 +39,15 @@
 		select * from(
 		select rownum as rn, p.* from
 		((select * from banner where name like '%'||#{param2}||'%' order by oseq desc, banner_num asc) p )
+		) where rn &gt;= #{param1.startNum}
+		) where rn &lt;= #{param1.endNum}
+	</select>
+	
+	<select id="listReservation" resultType="com.ezen.dto.ReservVO">
+		select * from (
+		select * from(
+		select rownum as rn, p.* from
+		((select * from reservation where r_name like '%'||#{param2}||'%' or r_phone like '%'||#{param2}||'%' order by  reserv_num asc) p )
 		) where rn &gt;= #{param1.startNum}
 		) where rn &lt;= #{param1.endNum}
 	</select>
@@ -116,14 +129,9 @@
 	<select id="getBanner" resultType="com.ezen.dto.BannerVO">
 		select * from banner where banner_num=${param1}
 	</select>
+	
+	<select id="getAdminMember" parameterType="com.ezen.dto.MemberVO">
+		select * from member where member_num=${param1}
+	</select>
 
 </mapper>
-
-
-
-
-
-
-
-
-

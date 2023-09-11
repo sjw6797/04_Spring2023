@@ -163,9 +163,9 @@ table.adminTable td {
 				<li><a href="adminMemberList?first=1">유저관리</a></li>
 				<li><a href="adminQnaList?first=1">Q&A관리</a></li>
 				<li><a href="adminBoardList?first=1">공지사항관리</a></li>
-				<li><a href="adminProductList">상품관리</a></li>
+				<li><a href="adminProductList">여행지관리</a></li>
 				<li><a href="adminBannerList?first=1">배너관리</a></li>
-				<li><a href="passengerList?first=1">예약관리</a></li>
+				<li><a href="searchPassenAdmin?first=1">예약관리</a></li>
 			</ul>
 		</div>
 	</div>

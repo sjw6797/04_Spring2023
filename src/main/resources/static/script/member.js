@@ -60,34 +60,67 @@ $(function(){
 })
 
 // 해상도별로 자바스크립트를 다르게 설정
-	if (matchMedia("screen and (min-width: 1000px)").matches) {
-		function roundtrip() {
-			$('#comback').css({"display":"block"})
-			$('.inputcontent').css({"width":"16.3%"})
-	
-		}
-	
-		function oneway() {
-			$('#comback').css({"display":"none"})
-			$('.inputcontent').css({"width":"19.6%"})
-		}
-		
-	} else {
-		function roundtrip() {
-			$('#comback').css({"display":"block"})
-			$("#datepicker2").attr('disabled', false);
-			$('.inputcontent').css({"width":"100%"})
-		}
-	
-		function oneway() {
-			$('#comback').css({"display":"none"})
-			$("#datepicker2").attr('disabled', true);
-			$('.inputcontent').css({"width":"100%"})
-		}
+if (matchMedia("screen and (min-width: 1000px)").matches) {
+	function roundtrip() {
+		$('#comback').css({ "display": "block" })
+		$('.inputcontent').css({ "width": "16.3%" })
+
 	}
 
-// 07/06 신정우 작성
-function submit(){
-	document.formm.submit();
+	function oneway() {
+		$('#comback').css({ "display": "none" })
+		$('.inputcontent').css({ "width": "19.6%" })
+	}
+	
+	function select() {
+		var url = "?"
+		var name = "?"
+		 var option = "fullscreen=no,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no, width=500, height=500";
+		
+		window.open(url, name,  option);
+	}
+
+} else {
+	function roundtrip() {
+		$('#comback').css({ "display": "block" })
+		$("#datepicker2").attr('disabled', false);
+		$('.inputcontent').css({ "width": "100%" })
+	}
+
+	function oneway() {
+		$('#comback').css({ "display": "none" })
+		$("#datepicker2").attr('disabled', true);
+		$('.inputcontent').css({ "width": "100%" })
+	}
 }
-//
+
+// 07/06 신정우 작성 07/11 내용추가(두원)
+	function submit() {
+	if (document.formm.depAirportNm.value == "") {
+		alert("출발지를 입력하세요")
+		return false
+	} else if (document.formm.arrAirportNm.value == "") {
+		alert("도착지를 입력하세요")
+		return false
+	} else if (document.formm.passenNum.value == null || document.formm.passenNum.value <= 0) {
+		alert("탑승인원을 입력하세요")
+		return false
+	} else {
+		document.formm.submit()
+	}
+}
+
+function memberDelete() {
+	var userInput = confirm("정말 탈퇴 하시겠습니까?")
+	if(userInput == true) {
+		location.href = "memberDelete"
+	} else {
+		return;
+	}
+
+}
+
+
+
+
+

@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="../include/header.jsp"%>
 
 <style>
 body {
@@ -129,14 +128,23 @@ $(document).ready(function() {
             let arrAirportNm = $.trim($(this).find("td:eq(1)").text());
             let depPlandTime = $.trim($(this).find("td:eq(2)").text()); 
             let arrPlandTime = $.trim($(this).find("td:eq(3)").text()); 
+
             let airlineNm = $.trim($(this).find("td:eq(4)").text());
-            let vihicleId = $.trim($(this).find("td:eq(5)").text());
+            let vihicleId = $.trim($(this).find("td:eq(6)").text());
+            //0711
+            let economyCharge2 = $.trim($(this).find("td:eq(7)").text());
+            let prestigeCharge2 = $.trim($(this).find("td:eq(8)").text());
+            
             let economyCharge = $(this).find('#economyCharge').val();
             let prestigeCharge = $(this).find('#prestigeCharge').val();
             
+            
+            var passenNum = $('#passenNum').val();
+            
             let economyCharge1 = $(this).find('td:nth-child(7) span').text().trim();
             let prestigeCharge1 = $(this).find('td:nth-child(8) span').text().trim();
-            if (economyCharge1 === '매진' && prestigeCharge1 === '매진') {
+            
+            if (economyCharge2 == '매진' && prestigeCharge2 == '매진') {
                 alert('다른 좌석을 선택하세요');
                 return;
             }
@@ -150,6 +158,7 @@ $(document).ready(function() {
             console.log('prestigeCharge: ' + prestigeCharge);
             console.log('airlineNm: ' + airlineNm);
             console.log('vihicleId: ' + vihicleId);
+            console.log('passenNum: ' + passenNum);
             
             clickedRowData = {
                 depAirportNm: depAirportNm,
@@ -159,74 +168,85 @@ $(document).ready(function() {
                 economyCharge: economyCharge,
                 prestigeCharge: prestigeCharge,
                 airlineNm: airlineNm,
-                vihicleId : vihicleId
+                vihicleId : vihicleId,
+                passenNum : passenNum
             };
 
-            let str = depAirportNm + "/" + arrAirportNm + "/" + depPlandTime + "/" + arrPlandTime + "/" + economyCharge + "/" + prestigeCharge + "/" + airlineNm+"/"+ vihicleId ;
+            let str = depAirportNm + "/" + arrAirportNm + "/" + depPlandTime + "/" + arrPlandTime + "/" + economyCharge + "/" + prestigeCharge + "/" + airlineNm+"/"+ vihicleId +"/"+passenNum;
             
             console.log(str);
             $('p').text(str);
-        });
+            
+            // 0711
+            goto_passen();
+        }		
+        );
     });
 });
 
 
 
 function goto_passen() {
-    // Check if any row has been clicked
-    if (clickedRowData === null) {
-        alert("좌석을 선택하세요");
-        return;
-    }
+	
+	var a = confirm("해당 노선을 선택하시겠습니까?")
+	if(a){
+		// Check if any row has been clicked
+		/*     if (clickedRowData === null) {
+		        alert("좌석을 선택하세요");
+		        return;
+		    } */
 
-    // Process data and create parameters
-    let params = {};
-    for (let key in clickedRowData) {
-        let value = clickedRowData[key];
+		    // Process data and create parameters
+		    let params = {};
+		    for (let key in clickedRowData) {
+		        let value = clickedRowData[key];
 
-        // Remove line breaks and tab characters
-        value = value.replace(/\n|\t/g, "");
+		        // Remove line breaks and tab characters
+		        value = value.replace(/\n|\t/g, "");
 
-        // URL encode the processed value
-        
-       value = encodeURIComponent(value.trim());
-        
-        //value = value.innerText.trim();;
-        
-        console.log( "1.value   "+ value);
-        
-        params[key] = decodeURIComponent(value);
-        
-        console.log( "2.params   "+ params);
-    }
+		        // URL encode the processed value
+		        
+		       value = encodeURIComponent(value.trim());
+		        
+		        //value = value.innerText.trim();;
+		        
+		        console.log( "1.value   "+ value);
+		        
+		        params[key] = decodeURIComponent(value);
+		        
+		        console.log( "2.params   "+ params);
+		    }
 
-    // Convert parameters object to string
-    let paramsStr = new URLSearchParams(params).toString();
-    console.log( "3.paramsStr   "+ paramsStr);
+		    // Convert parameters object to string
+		    let paramsStr = new URLSearchParams(params).toString();
+		    console.log( "3.paramsStr   "+ paramsStr);
 
-    // Create form
-    let form = document.createElement('form');
-    form.method = 'POST';
-    form.action = "/insertPassen";
-    form.style.display = 'none';
+		    // Create form
+		    let form = document.createElement('form');
+		    form.method = 'POST';
+		    form.action = "/insertPassen";
+		    form.style.display = 'none';
 
-    // Split params string into individual parameters
-    let splitParams = paramsStr.split("&");
+		    // Split params string into individual parameters
+		    let splitParams = paramsStr.split("&");
 
-    splitParams.forEach(param => {
-        let [key, value] = param.split("=");
-        let input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        value = decodeURIComponent(value); // Decode value before setting
-        console.log( "4.input.value   "+ value);
-        input.value = value;
-        form.appendChild(input);
-    });
+		    splitParams.forEach(param => {
+		        let [key, value] = param.split("=");
+		        let input = document.createElement('input');
+		        input.type = 'hidden';
+		        input.name = key;
+		        value = decodeURIComponent(value); // Decode value before setting
+		        console.log( "4.input.value   "+ value);
+		        input.value = value;
+		        form.appendChild(input);
+		    });
 
-    // Append form to body and submit
-    document.body.appendChild(form);
-    form.submit();
+		    // Append form to body and submit
+		    document.body.appendChild(form);
+		    form.submit();
+	}else return;
+	
+    
 }
 
 </script>
@@ -237,9 +257,6 @@ function goto_passen() {
 
 
 <article>
-
-	<!--  <h2>돌아오는날 노선 결과물 routeList</h2>-->
-	
 
 		<form method="post" action="insertPassen">
 		
@@ -255,101 +272,117 @@ function goto_passen() {
 				</span>
 			</div>
 		</div>
+		<input type="hidden" id="passenNum" value="${passenNum}" >
 		<div class="row">
-				<table id="routeList" class="routeList">
-																
-						<tr>
-							
-							<!-- <th>노선고유번호 </th>  -->
-							<th>출발지 </th> <!-- 출발공항 -->
-							<th>목적지 </th><!-- 도착공항 -->
-							<th>출발일시 </th>						
-							<th>도착일시</th>
-							<th>항공사</th>  
-							<th>항공편 ID</th>
-							<th>이코노미석 가격</th>
-							<th>프레티지석 가격</th>
-							
-						</tr>
-						
-						<c:forEach items="${return_list}" var="item" varStatus="state"> 
-						 <tr>
-					        <td>
-					            ${item.depAirportNm}
-					        </td>
-					        <td>					            
-					            ${item.arrAirportNm}
-					        </td>
-					        
-					        
-					        
-					        <td>
-					        
-							
-							<fmt:formatDate value="${item.depPlandTimeDate}" pattern="yyyy-MM-dd HH:mm"/> 
-
-					       
-					        </td>
-							<td>
-							
-
-							<fmt:formatDate value="${item.arrPlandTimeDate}" pattern="yyyy-MM-dd HH:mm"/> 
-							
-							
-							
-							</td>
-
-					        
-					        <td>				            
-					            ${item.airlineNm}
-					        </td>
-					        <td> ${item.vihicleId}</td>
-					        
-					        
-					        <c:choose>
-								  <c:when test="${item.economyCharge ne null and item.economyCharge ne 0 }">
-								    <td>
-								      <fmt:formatNumber value="${item.economyCharge}" pattern="₩ #,###" type="currency" currencySymbol="₩" />
-								      <input type="hidden" id="economyCharge"  value="${item.economyCharge}" >
-								    </td>
-								  </c:when>
-								  
-								  <c:otherwise>
-								    <td>
-								      <span style="color: red;">매진</span>
-								      <input type="hidden" id="economyCharge"  value="${item.economyCharge}" >
-								    </td>
-								  </c:otherwise>
-							</c:choose>
-					        
-					        
-					        <c:choose>
-								  <c:when test="${item.prestigeCharge ne 0 and item.prestigeCharge ne null }">
-								    <td>
-								      <fmt:formatNumber value="${item.prestigeCharge}" pattern="₩ #,###" type="currency" currencySymbol="₩" />
-								   	  <input type="hidden" id="prestigeCharge"  value="${item.prestigeCharge}" >
-								    </td>
-								  </c:when>
-								  
-								  <c:otherwise>
-								    <td>
-								      <span style="color: red;">매진</span>
-								      <input type="hidden" id="prestigeCharge"  value="${item.prestigeCharge}" >
-								    </td>
-								  </c:otherwise>
-							</c:choose>
+			<table id="routeList" class="routeList">											
+			<tr>
+				<th>출발지 </th> 
+				<th>목적지 </th>
+				<th>출발일시 </th>						
+				<th>도착일시</th>
+				<th>항공사</th>
+				<th>좌석현황</th>  
+				<th>항공편ID</th>
+				<th>이코노미석 가격</th>
+				<th>프레티지석 가격</th>
+			</tr>
+				
+			<c:forEach items="${return_list}" var="item" varStatus="state"> 
+				<c:set var="now" value="<%= new java.util.Date() %>"/>
+					<c:if test="${now lt item.depPlandTimeDate}">
+					 <tr>
+				        <td>
+				            ${item.depAirportNm}
+				        </td>
+				        <td>					            
+				            ${item.arrAirportNm}
+				        </td>
+				        <td>
+						<fmt:formatDate value="${item.depPlandTimeDate}" pattern="yyyy-MM-dd HH:mm"/> 	
+				        </td>
+						<td>
+						<fmt:formatDate value="${item.arrPlandTimeDate}" pattern="yyyy-MM-dd HH:mm"/> 		
+						</td>
+					    <!-- 항공사 정보 및 이미지 -->
+						<td style="text-align: center">
+				        	<c:forEach items="${airlineList}" var="airlineList" varStatus="state">
+					        	<c:if test="${item.airlineNm==airlineList.airline_name}">
+					        		<img src="images/booking/${airlineList.image}" style="width:50px;"/><br>
+					        		${item.airlineNm}
+					        	</c:if>
+				        	</c:forEach>	            
+			      		</td>
+	       				<!-- 남은좌석 수 start 0711 -->
+				        <td>
+				        	<!-- item -->
+				        	<c:choose>
+				        		<c:when test="${empty item.economyCharge || item.economyCharge == 0 }">
+				        			<div>
+				        				이코노미 잔여 좌석 수 : 0
+				        			</div>
+				        		</c:when>
+				        		<c:otherwise>
+				        			<div>	
+				        				이코노미 잔여 좌석 수 : ${item.remain_economy }				
+				        			</div>
+				        		</c:otherwise>
+				        	</c:choose>
+				        	
+				        	<c:choose>
+				        		<c:when test="${empty item.prestigeCharge || item.prestigeCharge ==0}">
+				        			<div>
+				        				프레스티지 잔여 좌석 수 : 0
+				        			</div>
+				        		</c:when>
+				        		<c:otherwise>
+				        				프레스티지 잔여 좌석 수 : ${item.remain_prestige }
+				        		</c:otherwise>
+				        	</c:choose>
+				        </td>
+				        <!-- 남은좌석 수 end -->
+				        <td> ${item.vihicleId}</td>
+				        
+				        
+				        <c:choose>
+							  <c:when test="${item.economyCharge ne null and item.economyCharge ne 0 }">
+							    <td>
+							      <fmt:formatNumber value="${item.economyCharge}" pattern="₩ #,###" type="currency" currencySymbol="₩" />
+							      <input type="hidden" id="economyCharge"  value="${item.economyCharge}" >
+							    </td>
+							  </c:when>
+							  
+							  <c:otherwise>
+							    <td>
+							      <span style="color: red;">매진</span>
+							      <input type="hidden" id="economyCharge"  value="${item.economyCharge}" >
+							    </td>
+							  </c:otherwise>
+						</c:choose>
+				        
+				        
+				        <c:choose>
+							  <c:when test="${item.prestigeCharge ne 0 and item.prestigeCharge ne null }">
+							    <td>
+							      <fmt:formatNumber value="${item.prestigeCharge}" pattern="₩ #,###" type="currency" currencySymbol="₩" />
+							   	  <input type="hidden" id="prestigeCharge"  value="${item.prestigeCharge}" >
+							    </td>
+							  </c:when>
+							  
+							  <c:otherwise>
+							    <td>
+							      <span style="color: red;">매진</span>
+							      <input type="hidden" id="prestigeCharge"  value="${item.prestigeCharge}" >
+							    </td>
+							  </c:otherwise>
+						</c:choose>
 					</tr>
-						</c:forEach>
-						
-						
-							
-				</table>	
-				
-				
-				
+				</c:if>
+				</c:forEach>	
+		</table>	
 				<p></p>
 			 <input type="submit" value="선택하기" class="submit" onclick="event.preventDefault(); goto_passen()"/>
 			 </div>
 	</form>
 	
 </article>
+<%@ include file="../include/footer.jsp"%>

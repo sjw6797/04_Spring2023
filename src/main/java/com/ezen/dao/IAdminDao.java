@@ -11,6 +11,7 @@ import com.ezen.dto.BoardVO;
 import com.ezen.dto.MemberVO;
 import com.ezen.dto.Paging;
 import com.ezen.dto.ProductVO;
+import com.ezen.dto.ReservVO;
 
 @Mapper
 public interface IAdminDao {
@@ -62,5 +63,11 @@ public interface IAdminDao {
 	void deleteProduct(int product_num);
 
 	BannerVO getBanner(int banner_num);
+
+	int getAllCountReservation(String string, String string2, String key, String key2);
+
+	List<ReservVO> listReservation(Paging paging, String key);
+
+	MemberVO getAdminMember(int member_num);
 
 }

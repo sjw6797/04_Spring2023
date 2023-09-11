@@ -1,9 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<link type="text/css" rel="stylesheet" href="/css/footer.css">
+<style>
 
+/* 	@media ( max-width : 1000px) {
+		#footul li img {
+			width: 60px; height: 60px;
+		}
+	} */
+</style>
+<link type="text/css" rel="stylesheet" href="/css/footer.css">
 	<div class="footer_main">
 		<div class="footer_main_text">
-			<ul class="ul" style="margin-top: 15px;">
+			<ul class="ul" style="margin-top: 15px; display: block; overflow: hidden;">
 				<li><strong style="color: #00256c; font-weight: bold;">(주) 이젠항공</strong>&nbsp;&nbsp;&nbsp;대표 : 신정우 등3명&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</li>
 				<li>주소 : 서울특별시 강서구 하늘길 260&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</li>
 				<li>전화 : 1588-2001 / 02-2656-2001</li>
@@ -15,14 +22,13 @@
 				<br>
 				<b style="color: black; font-weight: bold;">© 1997-2023 KOREAN AIR</b>
 			</ul>
-			<ul class="ul" id="footul">
-				<li><img src="https://www.koreanair.com/logo__wa.svg"></li>
-				<li><img src="https://www.koreanair.com/logo__isms.png"></li>
-				<li><img src="https://www.koreanair.com/logo__ccm.png"></li>
-				<li><img src="https://www.koreanair.com/logo__skytrax.png"></li>
-			</ul>
-		</div>
-	
+				<div style="display: flex;">
+					<img src="https://www.koreanair.com/logo__wa.svg" style="float: left;">
+					<img src="https://www.koreanair.com/logo__isms.png" style="float: left;">
+					<img src="https://www.koreanair.com/logo__ccm.png" style="float: left;">
+					<img src="https://www.koreanair.com/logo__skytrax.png" style="float: left;">
+				</div>
+			</div>
 	</div>
 	
 </div>

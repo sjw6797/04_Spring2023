@@ -29,7 +29,7 @@
 	
 	<!-- qna작성 -->
 	<insert id="qnaInsert">
-		insert into qna(qna_num,mnum,title,content) values(qna_seq.nextval,#{param2},#{param1.title},#{param1.content})
+		insert into qna(qna_num,mnum,title,content,imgfilename,pass,passcheck) values(qna_seq.nextval,#{param2},#{param1.title},#{param1.content},#{param1.imgfilename},#{param1.pass},#{param1.passcheck})
 	</insert>
 	
 	<select id="getMemberBymnum" resultType="_int">

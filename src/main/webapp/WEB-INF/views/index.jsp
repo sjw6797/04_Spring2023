@@ -75,17 +75,40 @@ $(function() {
 	$('#datepicker2').datepicker('setDate', 'today'); //(-1D:하루전, -1M:한달전, -1Y:일년전), (+1D:하루후, -1M:한달후, -1Y:일년후)            
 });
 
-	$(function() {
-		var num = 0;
-		setInterval(function() {
-			$('.mainbanner2').animate({
-				left : num * -document.body.clientWidth 
-			}, 1000);
-			num++;
-			if (num == Number('${size}'))
-				num = 0;
-		}, 2000);
+$(function() {
+	var num = 0;
+	setInterval(function() {
+		$('.mainbanner2').animate({
+			left : num * -document.body.clientWidth
+		}, 1000);
+		num++;
+		if (num == Number('${size}'))
+			num = 0;
+	}, 2000);
+});
+	
+	
+function memberDelete() {
+	var userInput = prompt("비밀번호를 입력하세요 : ");
+		
+		$.ajax({
+			url:"<%=request.getContextPath() %>/memberDelete?pwd=" + userInput,    
+			type:"GET",
+			async: false, 
+	    	contentType : false,
+	        processData : false,
+	        
+	        success : function(data){   
+	            if(data  == -1){  	
+					alert("비밀번호가 틀렸습니다")
+	            } else {
+	            	alert("회원탈퇴에 성공했습니다")
+	            	location.href="/"
+	            }
+	        },
+	        error: function() {alert("실패");}
 	});
+}
 </script>
 <link type="text/css" rel="stylesheet" href="/css/main.css">
 <link type="text/css" rel="stylesheet" href="/css/m_main.css">
@@ -109,7 +132,7 @@ $(function() {
 					
 					<div class="inputcontent">
 						<label>도착지</label>
-						<input type="text" name="arrAirportNm" id="search" list="searchOptions" class="content-input" style="width: 100%;"/>
+						<input type="text" name="arrAirportNm" id="search" list="searchOptions" class="content-input" style="width: 100%;" value="${con1}"/>
 			            <datalist id="searchOptions" class="content-input" style="width: 100%;">
 			            	<c:forEach items="${countryList}" var="country">
 			            		<option value="${country}">
@@ -129,7 +152,7 @@ $(function() {
 						<input type="number" name="passenNum" class="content-input" min="1" max="10" value="1" style="width: 100%;">
 					</div>
 					<div class="inputcontent" style="text-align: center; background-color: #0062e3; color: white; cursor: pointer; 
-					line-height: 60px; font-weight: bold; font-size: 140%;" onclick="submit();">검색하기</div>
+					line-height: 60px; font-weight: bold; font-size: 140%;" onclick="return submit();">검색하기</div>
 				</div>
 				<div id="trip">
 					<input type="radio" name="flag" value="2" checked="checked" onclick="roundtrip()">왕복
@@ -139,75 +162,51 @@ $(function() {
 		</div>
 	</div>
 </form>
+
 <div id="content_img">
 	<div class="rollbanner">
-		<div class="mainbanner2">
+		<div class="mainbanner2" style="overflow: auto;">
 			<c:forEach items="${bannerList}" var="dto">
-				<img src="/upload/${dto.image}">
+				<img src="/upload/${dto.image}" class="bannerImg">
 			</c:forEach>
 		</div>
 	</div>
 </div>
 
 <div id="content">
-	<h1 style="display: block;">인기 여행지</h1>
+	<h1 style="display: block;">비행기 예매순위</h1>
 	<div class="bestimg">
-		<c:forEach items="${productList}" var="dto" step="1" end="4">
+		<c:forEach items="${productList}" var="dto" begin="0" end="3" varStatus="stat">
 			<div class="bestcontent" onclick="location.href='productDetail?product_num=${dto.product_num}' ">
 				<div class="detailimg">
-					<!-- <img src="https://t1.daumcdn.net/cfile/tistory/2314D84754D09D2F3F"> -->
 					<img src="upload/${dto.image}">
 				</div>
 				<div class="detailtext">
+					<span style="color: gray;  padding-top: 20px; display: block;">${stat.index +1}등&nbsp;${dto.category}</span>
 					<h3>${dto.title}</h3>
 				</div>
 			</div>
-			
 		</c:forEach>
 	</div>
 </div>
 
-<div id="content">
-	<h1 style="display: block;">테스트</h1>
-	<div class="bestimg">
-		<div class="bestcontent">
-			<div class="detailimg">
-				<img src="https://t1.daumcdn.net/cfile/tistory/2314D84754D09D2F3F">
-			</div>
-			<div class="detailtext">
-				<h3>제주도 인기여행지!!~~</h3>
-				<h4>가격 : 3,000,000원</h4>
-			</div>
+<div id="content" class="board_content">
+	<h1 style="display: block;">공지사항</h1>
+	<c:forEach items="${boardList}" var="dto" begin="0" end="3">
+		<div class="board_div" onclick="location.href='boardDetail?board_num=${dto.board_num}' ">
+			<span>${dto.board_num}</span>
+			<span>${dto.title}</span>
+			<span><fmt:formatDate value="${dto.indate}" pattern="yy-MM-dd"/></span>
 		</div>
-		<div class="bestcontent">
-			<div class="detailimg">
-				<img src="images/어드민로고.png">
-			</div>
-			<div class="detailtext">
-				<h3>제주도 인기여행지!!~~</h3>
-				<h4>가격 : 3,000,000원</h4>
-			</div>
-		</div>
-		<div class="bestcontent">
-			<div class="detailimg">
-				<img src="images/카카오로그인.png">
-			</div>
-			<div class="detailtext">
-				<h3>제주도 인기여행지!!~~</h3>
-				<h4>가격 : 3,000,000원</h4>
-			</div>
-		</div>
-		<div class="bestcontent">
-			<div class="detailimg">
-				<img src="images/카카오로그인큰버전.png">
-			</div>
-			<div class="detailtext">
-				<h3>제주도 인기여행지!!~~</h3>
-				<h4>가격 : 3,000,000원</h4>
-			</div>
-		</div>
-	</div>
+	</c:forEach>
 </div>
 
-
 <%@ include file="include/footer.jsp"%>
+
+
+
+
+
+
+
+

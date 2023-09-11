@@ -110,8 +110,30 @@
 }
 .detailtext>h3,h4 {
 	margin: 0;
-	line-height: 50px;
+	line-height: 60px;
 	display: block;
+}
+
+.board_div {
+	border-bottom: 1px solid #D3D3D3; padding: 20px 0; 
+	font-size: 120%; cursor: pointer;
+}
+
+.board_div:hover {
+	background-color: #E2E2E2;
+}
+
+.board_div span {
+	display: inline-block;
+}
+
+.board_div span:first-child {
+	width: 20%;
+	margin-left: 5%;
+}
+
+.board_div span:nth-last-child(2){
+	width: 60%;
 }
 
 

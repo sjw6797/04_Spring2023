@@ -1,12 +1,12 @@
 
 package com.ezen.flight_info;
 
-import javax.annotation.Generated;
-import javax.validation.constraints.NotEmpty;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.annotation.Generated;
+import javax.validation.constraints.NotEmpty;
 
 import lombok.Data;
 
@@ -27,6 +27,12 @@ public class Item {
    private String vihicleId;
    private Integer economyCharge;
    private Integer prestigeCharge;
+   
+   
+   private Integer remain_economy;
+   private Integer remain_prestige;
+   
+
    
    // long자료형 String자료형으로 바꾼후 리턴
    public String getDepPlandTime() {

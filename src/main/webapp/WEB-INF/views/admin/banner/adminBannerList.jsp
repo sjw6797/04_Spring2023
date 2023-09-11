@@ -32,7 +32,7 @@
 					<tr>
 					<td style="color: red;">${dto.banner_num}</td>
 					<td>
-						<a href="adminbannerDetail?banner_num=${ dto.banner_num }"  style="color: red;">${dto.name}</a>
+						<a href="adminBannerDetail?banner_num=${ dto.banner_num }"  style="color: red;">${dto.name}</a>
 					</td>
 					<td>
 						<select name="oseq">

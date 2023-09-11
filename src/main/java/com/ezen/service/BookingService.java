@@ -4,10 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -28,113 +26,6 @@ public class BookingService {
 	@Autowired
 	IBookingDao bdao;
    
-    public HashMap<String, Object> getInfo(String depAirportNm, String arrAirportNm, String depPlandTime, String returnPlandTime ) {
-         
-         
-         HashMap<String, Object> result = new HashMap<String, Object>();
-         
-         // ♧♣♧♣ 가는날 일정 ♧♣♧♣
-            int totalCount1 = getTotalCount(depAirportNm, arrAirportNm, depPlandTime);   // 결과레코드 토탈 rowNum
-      
-            // 바로 위의 getTotalCount() 호출에서 결과가 0건인 경우에는 아래 if문만 실행하고 종료함
-            if (totalCount1 == 0) {
-               System.out.println("가는날 일정 :  출발지:" + depAirportNm + " / 도착지:" + arrAirportNm + " / 출발일자:" + depPlandTime);
-               System.out.println("지정한 조건에 대한 비행편이 존재하지 않습니다.");
-               result.put("list", "");
-               return result;
-            }
-            
-            FlightInfo depflightInfo = getFlightInfo(depAirportNm, arrAirportNm, depPlandTime, 1);
-            ArrayList<Item> flightItems1 = (ArrayList<Item>) depflightInfo.getResponse().getBody().getItems().getItem();
-            
-            System.out.println("가는날 일정 :  " + flightItems1);
-            
-            
-            
-            for (Item item : flightItems1) { 
-            	
-            	
-            	
-                System.out.println("항공사 : " + item.getAirlineNm());
-                System.out.println("출발지 : " + item.getDepAirportNm());
-                System.out.println("도착지 : " + item.getArrAirportNm());
-                
-                System.out.println("출발시간 : " + item.getDepPlandTime());
-                System.out.println("도착시간 : " + item.getArrPlandTime());
-                
-                
-                
-                System.out.println("일반석요금 : " + item.getEconomyCharge());
-                System.out.println("비즈니스석요금 : " + item.getPrestigeCharge());
-                System.out.println();
-                
-                
-                
-             }
-           
-            
-            
-         
-         // ♧♣♧♣ 돌아오는 일정 ♧♣♧♣
-            
-            int totalCount2 = getTotalCount(arrAirportNm, depAirportNm, returnPlandTime);   // 결과레코드 토탈 rowNum
-           
-            // 바로 위의 getTotalCount() 호출에서 결과가 0건인 경우에는 아래 if문만 실행하고 종료함
-            if (totalCount2 == 0) {
-               System.out.println("돌아오는날 일정 : 출발지:" + arrAirportNm + " / 도착지:" + depAirportNm + " / 출발일자:" +  returnPlandTime);
-               System.out.println("지정한 조건에 대한 비행편이 존재하지 않습니다.");
-               result.put("list", "");
-               return result;
-            }
-            
-            FlightInfo arrflightInfo = getFlightInfo(arrAirportNm, depAirportNm, returnPlandTime, 1);
-            ArrayList<Item> flightItems2 = (ArrayList<Item>) arrflightInfo.getResponse().getBody().getItems().getItem();
-            
-            System.out.println("오는날 일정 :  " +flightItems2);
-            
-            
-            
-            System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"); 
-            System.out.println("오는날 :  "); 
-            for (Item item : flightItems2) { 
-            	
-            	String DepPlandTime2 = String.valueOf(item.getDepPlandTime());
-            	String ArrPlandTime2 = String.valueOf(item.getArrPlandTime());
-            	
-                System.out.println("항공사 : " + item.getAirlineNm());
-                
-                System.out.println("출발지 : " + item.getDepAirportNm());
-                System.out.println("도착지 : " + item.getArrAirportNm());
-                
-                System.out.println("출발시간 : " + item.getDepPlandTime());
-                System.out.println("도착시간 : " + item.getArrPlandTime());
-                
-                System.out.println("String형 변환 출발시간 : " + DepPlandTime2);
-                System.out.println("String형 변환 도착시간 : " + ArrPlandTime2);
-                
-                System.out.println("일반석요금 : " + item.getEconomyCharge());
-                System.out.println("비즈니스석요금 : " + item.getPrestigeCharge());
-                System.out.println();
-                
-                
-                result.put("dep_list",flightItems1); //가는날
-                result.put("return_list",flightItems2); // 돌아오는날 
-                
-                result.put("depAirportNm", depAirportNm);
-                result.put("arrAirportNm", arrAirportNm);
-                
-                result.put("DepPlandTime2", DepPlandTime2);
-                result.put("ArrPlandTime2", ArrPlandTime2);
-                
-               
-             }
-            
-         return result;
-         // 하나의 FlightInfo 객체 안에는 최대 50개까지의 검색결과 건수가 담길 수 있으므로 아래 for문으로 회전하면서 하나씩 출력함
-         
-      }
-
-      
          // 주어진 출발지, 도착지, 출발일자 조건에 대한 검색결과 건수 값을 읽어옴
          // 내부적으로는 출발지, 도착지, 출발일자 외에 페이지 1로 지정하여 FlightInfo 객체를 가져와 거기에서 totalCount 값을 가져오는
          // 방식을 취한다. 주어진 검색조건에 대하여 검색결과가 0건이든 10건이든 또는 100건이든 기본적으로 1페이지의 결과는 반환하기 때문이다.
@@ -247,7 +138,7 @@ public class BookingService {
 
             
 
-			if (list1 == null && list2 == null) {			    
+			if (list1.isEmpty() && list2.isEmpty()) {	    
 			    result.put("message", "예약내역이 존재하지 않습니다.");
 			} else {
 				result.put("list1", list1);
@@ -269,7 +160,7 @@ public class BookingService {
          String ReturnPlandTime = item.getReturnPlandTime();	// 돌아오는 날짜         
          // 2가지의 경우를 생각 (단편, 왕복)
          // flag가 1인경우(단편) 
-   if(flag.equals("1")) {
+         if(flag.equals("1")) {
         	// ♧♣♧♣ 가는날 일정 ♧♣♧♣
              int totalCount1 = getTotalCount(depAirportNm, arrAirportNm, depPlandTime);   // 결과레코드 토탈 rowNum
              
@@ -282,31 +173,75 @@ public class BookingService {
              }
              
              FlightInfo depflightInfo = getFlightInfo(depAirportNm, arrAirportNm, depPlandTime, 1);
-             List<Item> vihicleId = new ArrayList<>();
              
              ArrayList<Item> flightItems1 = (ArrayList<Item>) depflightInfo.getResponse().getBody().getItems().getItem();
-             System.out.println("가는날 일정 :  " + flightItems1);
-             System.out.println("가는날 :  "); 
-             for (Item list : flightItems1) { 
-                 System.out.println("항공사 : " + list.getAirlineNm());
-                 System.out.println("출발지 : " + list.getDepAirportNm());
-                 System.out.println("도착지 : " + list.getArrAirportNm());
-                 System.out.println("출발시간 : " + list.getDepPlandTime());
-                 System.out.println("도착시간 : " + list.getArrPlandTime());
-                 System.out.println("일반석요금 : " + list.getEconomyCharge());
-                 System.out.println("비즈니스석요금 : " + list.getPrestigeCharge());
-                 System.out.println("비행편 코드 : " + list.getVihicleId());
-                 System.out.println();
-                 
-              }
+             
+             /* 남는좌석 호출 -start 0711 */
+             /* 절차
+              * 1. getAirLine메소드로 이코노미/프레스티지(남은좌석) 리스트(A라 칭함)를 불러옴 
+              * 2. flightItem1(받아온 노선정보)로 부터 A리스트와 IDENTITY를 비교한다
+              * 3. 비교했을 때 같을 경우 A리스트의 남은좌석 정보를 flightItem1(VO)에 매칭해서 넣는다 
+              * 4. 비교했을 때 다른 경우 flightItem1(VO)에 수동적으로 값을 넣어준다.
+              * */
+             ArrayList<ReservVO> economy_List = bdao.getAirLine("view_economy_distinct");
+             ArrayList<ReservVO> prestige_List = bdao.getAirLine("view_prestige_distinct");
+             Item eitem = new Item();
+             for (int i=0; i<flightItems1.size(); i++) { 
+            	 eitem = flightItems1.get(i);
+            	 String tmp1=eitem.getVihicleId();
+            	 String tmp2=eitem.getDepPlandTime();
+            	 String tmp3= tmp1+tmp2;
+            	 
+	               for(ReservVO rvo2 : economy_List) {
+	            	   if( eitem.getVihicleId() !=null && rvo2.getIdentity().equals( tmp3 ) ) 
+	            	   {
+	            		   eitem.setRemain_economy( rvo2.getRemain_economy() );
+	            		   break;
+	                   }
+	                   else {
+	                	   String aname=eitem.getAirlineNm();
+	                	   if(aname==null) {
+	                		   aname="";
+	                	   }
+	                	   switch(aname) {
+	                	   case "아시아나항공" : eitem.setRemain_economy(50); break; case "에어부산" : eitem.setRemain_economy(49); break;
+	                	   case "이스타항공" : eitem.setRemain_economy(40); break; case "제주항공" : eitem.setRemain_economy(45); break;
+	                	   case "진에어" : eitem.setRemain_economy(44); break; case "대한항공" : eitem.setRemain_economy(51); break;
+	                	   case "티웨이항공" : eitem.setRemain_economy(46); break; case "에어서울" : eitem.setRemain_economy(47); break;
+	                	   case "하이에어" : eitem.setRemain_economy(30); break;
+	                	   default : eitem.setRemain_economy(10);
+	                	   }
+	                   }
+	               }
+	               
+	               for(ReservVO rvo2 : prestige_List) {
+	            	   if( eitem.getVihicleId() !=null && rvo2.getIdentity().equals( tmp3 ) ) {
+	            		   eitem.setRemain_prestige(rvo2.getRemain_prestige());
+	            		   break;
+	                   }
+	                   else {
+	                	   eitem.setRemain_prestige(50);
+	                	   String aname=eitem.getAirlineNm();
+	                	   if(aname==null) {
+	                		   aname="";
+	                	   }
+	                	   switch(aname) {
+	                	   case "아시아나항공" : eitem.setRemain_prestige(10); break; case "에어부산" : eitem.setRemain_prestige(9); break;
+	                	   case "이스타항공" : eitem.setRemain_prestige(6); break; case "제주항공" : eitem.setRemain_prestige(9); break;
+	                	   case "진에어" : eitem.setRemain_prestige(9); break; case "대한항공" : eitem.setRemain_prestige(10); break;
+	                	   case "티웨이항공" : eitem.setRemain_prestige(9); break; case "에어서울" : eitem.setRemain_prestige(8); break;
+	                	   case "하이에어" : eitem.setRemain_prestige(6); break;
+	                	   default : eitem.setRemain_prestige(5);
+	                	   }
+	                   }
+	               }
+             }
+             /* 남는좌석 호출 -end */
              result.put("dep_list",flightItems1); //가는날
-         
-             
-             
-             
-             
-  }else {
+  
+         }else {
         	// flag가 2인경우(왕복) 	
+        	 System.out.println("2");
         	 
         	// ♧♣♧♣ 가는날 일정 ♧♣♧♣
              int totalCount1 = getTotalCount(depAirportNm, arrAirportNm, depPlandTime);   // 결과레코드 토탈 rowNum
@@ -318,19 +253,70 @@ public class BookingService {
                 return result;
              }
              FlightInfo depflightInfo = getFlightInfo(depAirportNm, arrAirportNm, depPlandTime, 1);
-             ArrayList<Item> flightItems1 = (ArrayList<Item>) depflightInfo.getResponse().getBody().getItems().getItem();	//최종적으로 저장되는 리스트
-             System.out.println("in service 가는날 일정 :  " + flightItems1);
-             System.out.println("가는날 :  "); 
-             for (Item list : flightItems1) { 
-                 System.out.println("항공사 : " + list.getAirlineNm());
-                 System.out.println("출발지 : " + list.getDepAirportNm());
-                 System.out.println("도착지 : " + list.getArrAirportNm());
-                 System.out.println("출발시간 : " + list.getDepPlandTime());
-                 System.out.println("도착시간 : " + list.getArrPlandTime());
-                 System.out.println("일반석요금 : " + list.getEconomyCharge());
-                 System.out.println("비즈니스석요금 : " + list.getPrestigeCharge());
-                 System.out.println();
-              }
+             ArrayList<Item> flightItems1 = (ArrayList<Item>) depflightInfo.getResponse().getBody().getItems().getItem();	//최종적으로 저장되는 리스트 
+             
+             /* 남는좌석 호출 -start */
+             /* 절차
+              * 1. getAirLine메소드로 이코노미/프레스티지(남은좌석) 리스트(A라 칭함)를 불러옴 
+              * 2. flightItem1(받아온 노선정보)로 부터 A리스트와 IDENTITY를 비교한다
+              * 3. 비교했을 때 같을 경우 A리스트의 남은좌석 정보를 flightItem1(VO)에 매칭해서 넣는다 
+              * 4. 비교했을 때 다른 경우 flightItem1(VO)에 수동적으로 값을 넣어준다.
+              * */
+             ArrayList<ReservVO> economy_List = bdao.getAirLine("view_economy_distinct");
+             ArrayList<ReservVO> prestige_List = bdao.getAirLine("view_prestige_distinct");
+             Item eitem = new Item();
+             for (int i=0; i<flightItems1.size(); i++) { 
+            	 eitem = flightItems1.get(i);
+            	 String tmp1=eitem.getVihicleId();
+            	 String tmp2=eitem.getDepPlandTime();
+            	 String tmp3= tmp1+tmp2;
+            	 
+	               for(ReservVO rvo2 : economy_List) {
+	            	   if( eitem.getVihicleId() !=null && rvo2.getIdentity().equals( tmp3 ) ) 
+	            	   {
+	            		   eitem.setRemain_economy( rvo2.getRemain_economy() );
+	            		   break;
+	                   }
+	                   else {
+	                	   String aname=eitem.getAirlineNm();
+	                	   if(aname==null) {
+	                		   aname="";
+	                	   }  
+	                	   switch(aname) {
+	                	   case "아시아나항공" : eitem.setRemain_economy(50); break; case "에어부산" : eitem.setRemain_economy(49); break;
+	                	   case "이스타항공" : eitem.setRemain_economy(40); break; case "제주항공" : eitem.setRemain_economy(45); break;
+	                	   case "진에어" : eitem.setRemain_economy(44); break; case "대한항공" : eitem.setRemain_economy(51); break;
+	                	   case "티웨이항공" : eitem.setRemain_economy(46); break; case "에어서울" : eitem.setRemain_economy(47); break;
+	                	   case "하이에어" : eitem.setRemain_economy(30); break;
+	                	   default : eitem.setRemain_economy(10);
+	                	   }
+	                   }
+	               }
+	               
+	               for(ReservVO rvo2 : prestige_List) {
+	            	   if( eitem.getVihicleId() !=null && rvo2.getIdentity().equals( tmp3 ) ) {
+	            		   eitem.setRemain_prestige(rvo2.getRemain_prestige());
+	            		   break;
+	                   }
+	                   else {
+	                	   eitem.setRemain_prestige(50);
+	                	   String aname=eitem.getAirlineNm();
+	                	   if(aname==null) {
+	                		   aname="";
+	                	   }
+	                	   switch(aname) {
+	                	   case "아시아나항공" : eitem.setRemain_prestige(10); break; case "에어부산" : eitem.setRemain_prestige(9); break;
+	                	   case "이스타항공" : eitem.setRemain_prestige(6); break; case "제주항공" : eitem.setRemain_prestige(9); break;
+	                	   case "진에어" : eitem.setRemain_prestige(9); break; case "대한항공" : eitem.setRemain_prestige(10); break;
+	                	   case "티웨이항공" : eitem.setRemain_prestige(9); break; case "에어서울" : eitem.setRemain_prestige(8); break;
+	                	   case "하이에어" : eitem.setRemain_prestige(6); break;
+	                	   default : eitem.setRemain_prestige(5);
+	                	   }
+	                   }
+	               }
+             }
+             /* 남는좌석 호출 -end */
+     
         	 
         	// ♧♣♧♣ 돌아오는 일정 ♧♣♧♣
             int totalCount2 = getTotalCount(arrAirportNm, depAirportNm, ReturnPlandTime);   // 결과레코드 토탈 rowNum
@@ -345,18 +331,80 @@ public class BookingService {
             FlightInfo arrflightInfo = getFlightInfo(arrAirportNm, depAirportNm, ReturnPlandTime, 1);
             ArrayList<Item> flightItems2 = (ArrayList<Item>) arrflightInfo.getResponse().getBody().getItems().getItem();
             
+            /* 남는좌석 호출 -start */
+            /* 절차
+             * 1. getAirLine메소드로 이코노미/프레스티지(남은좌석) 리스트(A라 칭함)를 불러옴 
+             * 2. flightItem1(받아온 노선정보)로 부터 A리스트와 IDENTITY를 비교한다
+             * 3. 비교했을 때 같을 경우 A리스트의 남은좌석 정보를 flightItem1(VO)에 매칭해서 넣는다 
+             * 4. 비교했을 때 다른 경우 flightItem1(VO)에 수동적으로 값을 넣어준다.
+             * */
+            eitem = new Item();
+            for (int i=0; i<flightItems2.size(); i++) { 
+           	 eitem = flightItems2.get(i);
+           	 String tmp1=eitem.getVihicleId();
+           	 String tmp2=eitem.getDepPlandTime();
+           	 String tmp3= tmp1+tmp2;
+           	 
+	               for(ReservVO rvo2 : economy_List) {
+	            	   if( eitem.getVihicleId() !=null && rvo2.getIdentity().equals( tmp3 ) ) 
+	            	   {
+	            		   eitem.setRemain_economy( rvo2.getRemain_economy() );
+	            		   break;
+	                   }
+	                   else {
+	                	   String aname=eitem.getAirlineNm();
+	                	   if(aname==null) {
+	                		   aname="";
+	                	   }
+	                	   switch(aname) {
+	                	   case "아시아나항공" : eitem.setRemain_economy(50); break; case "에어부산" : eitem.setRemain_economy(49); break;
+	                	   case "이스타항공" : eitem.setRemain_economy(40); break; case "제주항공" : eitem.setRemain_economy(45); break;
+	                	   case "진에어" : eitem.setRemain_economy(44); break; case "대한항공" : eitem.setRemain_economy(51); break;
+	                	   case "티웨이항공" : eitem.setRemain_economy(46); break; case "에어서울" : eitem.setRemain_economy(47); break;
+	                	   case "하이에어" : eitem.setRemain_economy(30); break;
+	                	   default : eitem.setRemain_economy(10);
+	                	   }
+	                   }
+	               }
+	               
+	               for(ReservVO rvo2 : prestige_List) {
+	            	   if( eitem.getVihicleId() !=null && rvo2.getIdentity().equals( tmp3 ) ) {
+	            		   eitem.setRemain_prestige(rvo2.getRemain_prestige());
+	            		   break;
+	                   }
+	                   else {
+	                	   eitem.setRemain_prestige(50);
+	                	   String aname=eitem.getAirlineNm();
+	                	   if(aname==null) {
+	                		   aname="";
+	                	   }
+	                	   switch(aname) {
+	                	   case "아시아나항공" : eitem.setRemain_prestige(10); break; case "에어부산" : eitem.setRemain_prestige(9); break;
+	                	   case "이스타항공" : eitem.setRemain_prestige(6); break; case "제주항공" : eitem.setRemain_prestige(9); break;
+	                	   case "진에어" : eitem.setRemain_prestige(9); break; case "대한항공" : eitem.setRemain_prestige(10); break;
+	                	   case "티웨이항공" : eitem.setRemain_prestige(9); break; case "에어서울" : eitem.setRemain_prestige(8); break;
+	                	   case "하이에어" : eitem.setRemain_prestige(6); break;
+	                	   default : eitem.setRemain_prestige(5);
+	                	   }
+	                   }
+	               }
+            }
+            /* 남는좌석 호출 -end */
+            	
             System.out.println("오는날 일정 :  " +flightItems2);
             System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"); 
             System.out.println("오는날 :  "); 
             for (Item list : flightItems2) { 
-                System.out.println("항공사 : " + list.getAirlineNm());
-                System.out.println("출발지 : " + list.getDepAirportNm());
-                System.out.println("도착지 : " + list.getArrAirportNm());
-                System.out.println("출발시간 : " + list.getDepPlandTime());
-                System.out.println("도착시간 : " + list.getArrPlandTime());
-                System.out.println("일반석요금 : " + list.getEconomyCharge());
-                System.out.println("비즈니스석요금 : " + list.getPrestigeCharge());
-                System.out.println();
+				/*
+				 * System.out.println("항공사 : " + list.getAirlineNm());
+				 * System.out.println("출발지 : " + list.getDepAirportNm());
+				 * System.out.println("도착지 : " + list.getArrAirportNm());
+				 * System.out.println("출발시간 : " + list.getDepPlandTime());
+				 * System.out.println("도착시간 : " + list.getArrPlandTime());
+				 * System.out.println("일반석요금 : " + list.getEconomyCharge());
+				 * System.out.println("비즈니스석요금 : " + list.getPrestigeCharge());
+				 * System.out.println();
+				 */
             }
             result.put("dep_list",flightItems1); //가는날
             result.put("return_list",flightItems2); //오는날
@@ -396,29 +444,8 @@ public class BookingService {
 
 		}
           
-		  
-		
 
-		public int updatePassenInfo(String reservNum_return, String reservNum_dep) {
-			
-			
-			int result =1;
-			HashMap<String,Object>paramMap = new HashMap<String, Object>();
-			paramMap.put("reservNum_return",reservNum_return);
-			paramMap.put("reservNum_dep",reservNum_dep);
-			
-			
-			bdao.updatePassenInfo1(paramMap);
-			bdao.updatePassenInfo2(paramMap);
-			
-			
-		
-
-			return result;
-
-   }
-
-
+		/*
 		public int deletePassenInfo(String reservNum_return, String reservNum_dep) {
 			
 			int result=2;
@@ -429,13 +456,15 @@ public class BookingService {
 			bdao.deletePassenInfo2(paramMap);
 			return result;
 		}
+		*/
 
 
 		public int deletePassenInfo1(String reservNum_dep) {
 			int result=1;
 			HashMap<String,Object>paramMap = new HashMap<String, Object>();
-			paramMap.put("reservNum_dep",reservNum_dep);
-			bdao.deletePassenInfo1(paramMap);
+			/* paramMap.put("reservNum_dep",reservNum_dep); */
+			paramMap.put("reserv_num",reservNum_dep); 
+			bdao.deletePassenInfo1(reservNum_dep);
 			return result;
 		}
 
@@ -452,13 +481,18 @@ public class BookingService {
 			return result;
 		}
 		
+		
+		
+		
 		public HashMap<String, Object> getPassenList() { // 관리자 테이블에서 승객목록 불러오기 
 			HashMap<String, Object>result = new HashMap<String, Object>();
 			ArrayList <ReservVO> list = bdao.getPassenList();
 			System.out.println("IN 서비스 || 관리자 페이지에 뜨는 예약정보들  :  "+ list);
-			if (list==null) {			    
+			if (list.isEmpty()) {	
+				
 			    result.put("message", "예약내역이 존재하지 않습니다.");
 			} else {
+				
 				result.put("passenlist", list);
 			
 			}
@@ -466,7 +500,9 @@ public class BookingService {
 		}
 		
 		
-public HashMap<String, Object> getReservAdmin(String name, String phone) {
+		
+		/*
+		public HashMap<String, Object> getReservAdmin(String name, String phone) {
 			
 			
 			HashMap<String, Object>result = new HashMap<String, Object>();
@@ -477,8 +513,10 @@ public HashMap<String, Object> getReservAdmin(String name, String phone) {
 			
 			ArrayList <ReservVO> list = bdao.getReservAdmin(paramMap);
 			System.out.println(name+ "의일정 내역  :  " + list);
+			
+			
 
-			if (list == null ) {			    
+			if (list.isEmpty()) {			    
 			    result.put("message", "예약내역이 존재하지 않습니다.");
 			} else {
 				result.put("passenlist", list);
@@ -487,7 +525,15 @@ public HashMap<String, Object> getReservAdmin(String name, String phone) {
            
 			return result;
 		}
-		
-		
+		*/
 	
+		//신정우 작성 -start
+		public ArrayList<ReservVO> getAirLine(String grade) {
+			ArrayList<ReservVO> result = new ArrayList<ReservVO>();
+			result = bdao.getAirLine(grade);
+			
+			return result;
+		}
+		//신정우 작성 -end
+
 }

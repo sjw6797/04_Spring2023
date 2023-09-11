@@ -19,14 +19,11 @@
  }
 </script>
 <div id="qna_sub_img">
-	<div class="qna_sub_text">
-		이젠항공은 언제나 고객의 말씀을 경청하겠습니다<br>고객님의 문의, 제안, 칭송, 불편사항을 남겨주세요
-	</div>
-	<img alt="고객센터이미지" src="https://flyasiana.com/C/pc/image/sub/img_customer_visual.png" style="float: right; display: block;">
+	<img alt="고객센터이미지" src="/images/qna/qnaList_logo.jpg" style="margin:0 auto; display: block;">
 </div>
 <div class="clear"></div>
 
-<div id="content">
+<div id="content" style="width:90%">
 	<h2>Q&amp;A</h2>
 	<form action="qnaUpdate" name="frm" method="post">
 	<input type="hidden" name="qna_num" value="${qnaVO.qna_num}">
@@ -46,10 +43,10 @@
 			<div style="width:300px; text-align: center; float:left">
 					<c:choose>
 						<c:when test="${empty qnaVO.imgfilename}">
-							<img src="/upload/noname.jpg" id="preview" height="320">
+							<img src="/upload/noname.jpg" id="preview" height="300">
 						</c:when>
 						<c:otherwise>
-							<img src="/upload/${qnaVO.imgfilename}" id="preview" height="320">
+							<img src="/upload/${qnaVO.imgfilename}" id="preview" height="300">
 						</c:otherwise>
 					</c:choose>
 					<div id="image" style="float:left"></div> <!-- 이미지이름만 화면에 보여주는 역할 -->

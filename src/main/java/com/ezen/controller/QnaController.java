@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ezen.dto.AdminVO;
 import com.ezen.dto.MemberVO;
 import com.ezen.dto.QnaVO;
 import com.ezen.service.QnaService;
@@ -109,13 +108,22 @@ public class QnaController {
 	}
 	
 	@RequestMapping(value="/qnaInsert",method=RequestMethod.POST)
-	public String qnaInsert(@ModelAttribute("dto") @Valid QnaVO qnavo,HttpServletRequest request) {
+	public String qnaInsert(@ModelAttribute("dto") @Valid QnaVO qnavo,HttpServletRequest request,
+			@RequestParam(value="pass",required=false) String pass,
+			@RequestParam(value="check",required=false) String check) {
 		System.out.println("2");
 		HttpSession session = request.getSession();
 		MemberVO mvo =(MemberVO) session.getAttribute("loginUser");
 		if(mvo == null) {
 		return "member/loginForm";
 		}else {
+			if(check == null) {//체크박스에 체크를 안했다면
+				qnavo.setPasscheck("N");
+				qnavo.setPass("");
+			}else {
+				qnavo.setPasscheck("Y");
+				qnavo.setPass(pass);
+			}
 			//사용자 id를 추출해서 qnaInsert매개변수로 넣어준다
 			qs.qnaInsert( qnavo,mvo.getId() );
 		}

@@ -1,6 +1,8 @@
 package com.ezen.dto;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import lombok.Data;
 
@@ -22,7 +24,6 @@ public class ReservVO {
     private Timestamp indate;
     
     // airLine
- 
     private String vihicleid;
     private String airline_name;
     private String image;
@@ -30,7 +31,27 @@ public class ReservVO {
     private Integer prestige_sit;
     private Integer remain_economy;
     private Integer remain_prestige;
+    private String identity;
 	
+    public java.util.Date getDep_timeDate() {
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+    	try {
+			return sdf.parse(dep_time);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+    	return null;
+    }
+    
+    public java.util.Date getReturn_timeDate(){
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+    	try { 
+			return sdf.parse(return_time);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+    	return null;
+    }
 	
 	
 }

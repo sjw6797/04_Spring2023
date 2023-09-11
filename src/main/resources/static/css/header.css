@@ -16,6 +16,7 @@ ul {
  #mainlogo{
  	cursor: pointer;
  	width: 280px;
+ 	margin-top:22px;
  }
  
 
@@ -56,10 +57,16 @@ header {
 #topmodel {
 	position: absolute; width: 150px; background-color: white;
 	border-radius: 20px 20px 20px 20px; box-shadow: -3px 3px 10px black; display: none;
-	text-align: center; right: 0; top: 70px;
+	text-align: center; right: 0; top: 70px; overflow: hidden;
 }
+
 #topmodel label {
 	display: block; position: relative; cursor: pointer; height: 60px; line-height: 60px; color: black; font-size: 100%; font-weight: bold;
+}
+
+#topmodel label:hover {
+	background-color: #4A4F5A;
+	color: white;
 }
 
 #myPageDiv {

@@ -11,7 +11,7 @@ body {
 }
 
 h1{
-	  color:#00256c;
+	  color:#d1180b;
 	  font-weight:bold;
 	  	  
 }
@@ -39,11 +39,14 @@ margin-left : 450px;
 
 
 div#title{
-margin-left : 200px;
+margin-left : 100px;
+margin-bottom : 110px;
+
 
 }
 
-
+    
+    
 input[type="submit"] {
 	
 	border: none;
@@ -67,6 +70,8 @@ input[type="submit"] {
 padding-top:10px;
 
 }
+
+
 </style>
 <meta charset="UTF-8">
 
@@ -74,15 +79,22 @@ padding-top:10px;
 <div id="page">
 	<form method="post" action="/">
 		<div id="title">
-			<h1>삭제완료 되셨습니다</h1>
+			<h1>예약내역이 존재하지 않습니다</h1>
 		</div>
-			<img src="images/check.jpg" width="600"> 
-			<br>
-			<br>
-			<br>
-			<input type="submit" value="예약하러가기">
-			<img src="images/화살표.png" width="40" height="20" id="image"> 
+			<img src="images/execlamation.png" width="400"> 
+		<br>
+		<br>
+		<br>
+		
+		<input type="submit" value="예약하러가기">
+		<img src="images/화살표.png" width="40" height="20" id="image"> 
+		
 	</form>
 </div>
+<form>
+
+
+</form>
 </article>
+
 <%@ include file="../include/footer.jsp"%>

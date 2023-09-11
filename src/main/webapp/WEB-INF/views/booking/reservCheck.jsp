@@ -13,26 +13,26 @@ body {
 }
 
 h2{
-	   
-	   margin-left:30px;
-	   padding: 10px;
-	   font-size : 25px;	
-	  
+      
+      margin-left:30px;
+      padding: 10px;
+      font-size : 25px;   
+     
 }
 
 
 h4{
-	   
-	   text-align: center;
-	   font-size : 17px;	
-	       
+      
+      text-align: center;
+      font-size : 17px;   
+          
 }
 
 h5{
-	   color: #df0000;
-	   text-align: center;
-	   font-size : 17px;	
-	       
+      color: #df0000;
+      text-align: center;
+      font-size : 17px;   
+          
 }
 
 div#boxTitle img {
@@ -40,13 +40,7 @@ div#boxTitle img {
 }
 
 article {  /*노란색*/
-	width: 1300px;
-	heigth : 2000px;
-    max-width: 1900px;
-    max-heigth : 5000px;
-    margin: 0 auto;
     /*border:1px solid #FFFF00; */
-    margin: 0 auto;
     padding-top:100px;
     padding-bottom:100px;
     
@@ -54,18 +48,14 @@ article {  /*노란색*/
 
 div#searchBox{ /* 검색하기 + 검색 폼 */
 /*border:2px solid #00256c; */
-width: 1300px;
-heigth : 2000px;
-max-width: 1900px;
-max-heigth : 5000px;
-padding-left:400px;
+width: 700px;
 padding-bottom:100px;
+margin: 0 auto;
 
 }
 
 div#boxTitle{ /*남색 - 검색하기*/
 border-bottom:5px solid #E2E2E2;
-width: 60%; /*길이*/
 text-align: center; /* 글씨위치*/
 display: flex;
 align-items: center;
@@ -74,9 +64,8 @@ box-shadow: 0px 0px 20px rgba(0,0,0,0.05);
 }
 
 div#formBox{  /*빨간색*/
-
+padding-top:30px;
 /*border:2px solid #df0000;*/
-width: 60%; /*길이*/
 text-align: center; /*위치*/
 heigth :70%;
 box-shadow: 0px 0px 20px rgba(0,0,0,0.05);
@@ -84,7 +73,7 @@ box-shadow: 0px 0px 20px rgba(0,0,0,0.05);
 
 
 input[type="submit"] {
-	align-self: flex-end;
+   align-self: flex-end;
     background-color: #696969;
     border: none;
     color: white;
@@ -105,7 +94,7 @@ input[type="button"]:hover {
 
 
 input[type="text"] {
-    width: 50%;
+    width: 37%;
     padding: 15px;
     margin: 10px 0;
     border: 1px solid #696969;
@@ -126,6 +115,7 @@ fieldset{
 postion :relative;
 display : block;
 }
+
 #name{
 margin-top: 40PX;
 }
@@ -139,33 +129,25 @@ margin-top: 40PX;
 
 <article>
 <div id="searchBox">
-		<div id="boxTitle">
-			<h2>예약 확인 하기 </h2>
-			<img src="image/search.png" width="20" style="margin-right:39px;"> 
-		</div>	
-		
-		<div id="formBox">	
-			<form method="post" action="checkReserv">
-			<input type="hidden" name="command" value="reservCheck">
-				<!--<input type="hidden" name="command" value="Reserv">  -->
-				
-				
-
-				
-				이름  : <input type = "text" name="name">
-				전화번호  : <input type = "text" name="phone">
-
-
- 					
-		
-				<input type="submit" value="예약확인하기" class="submit"/><br>
-				<h5>${message}</h5>
-				<!--  <li><a href="routeList.jsp" class="nav-link px-2 link-secondary">노선검색 결과 페이지로</a></li>-->
-				    
-			   <br><br>
-			    
-			</form>
-		</div>
+      <div id="boxTitle">
+         <h2>예약 확인 하기 </h2>
+         <img src="images/search.png" width="20" style="margin-right:39px;"> 
+      </div>   
+      
+      <div id="formBox">   
+         <form method="get" action="checkReserv">
+            <!--<input type="hidden" name="command" value="Reserv">  -->
+      
+            이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;름  : <input type = "text" name="name"><br><br>
+            전화번호  : <input type = "text" name="phone"><br><br>
+            <input type="submit" value="예약확인하기" class="submit"/><br>
+            <h5>${message}</h5>
+            <!--  <li><a href="routeList.jsp" class="nav-link px-2 link-secondary">노선검색 결과 페이지로</a></li>-->
+                
+            <br><br>
+             
+         </form>
+      </div>
 </div>
 </article>
 <%@ include file="../include/footer.jsp"%>
